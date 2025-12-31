@@ -2,180 +2,146 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy 2026 from Salil</title>
+    <title>Happy 2026 - Salil's Party</title>
     <style>
-        :root { --gold: #ffd700; --glow: rgba(255, 215, 0, 0.4); }
-        
         body, html {
-            margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            /* New High-Quality Background */
-            background: linear-gradient(to bottom, #020111 10%, #191621 100%);
-            color: white;
+            margin: 0; padding: 0; height: 100%; overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            background: #050510; color: white;
+            background-image: radial-gradient(circle at center, #1b2735 0%, #090a0f 100%);
         }
 
-        /* Moving Starfield */
-        .stars {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: transparent url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
-            z-index: 0; opacity: 0.5; animation: drift 100s linear infinite;
+        /* Floating Stars Background */
+        .star {
+            position: absolute; background: white; border-radius: 50%;
+            opacity: 0.5; animation: twinkle var(--d) linear infinite;
         }
-        @keyframes drift { from { background-position: 0 0; } to { background-position: 1000px 500px; } }
+        @keyframes twinkle { 
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.5); opacity: 1; }
+        }
 
-        canvas { position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none; }
+        /* Main Container */
+        #main-container {
+            position: relative; z-index: 10; height: 100%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
 
-        /* Modern UI */
-        #ui-layer {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            z-index: 10; text-align: center; background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(15px); padding: 40px; border-radius: 30px;
-            border: 1px solid var(--gold); width: 350px; box-shadow: 0 0 50px rgba(0,0,0,1);
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            padding: 30px; border-radius: 20px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            text-align: center; width: 350px;
         }
 
         input {
-            width: 90%; padding: 12px; margin: 10px 0; border-radius: 10px;
-            border: none; background: #eee; font-size: 16px; color: #111;
+            width: 80%; padding: 12px; margin: 10px 0;
+            border-radius: 10px; border: none; font-size: 1rem;
         }
 
         button {
-            width: 100%; padding: 16px; margin-top: 20px; border-radius: 50px;
-            border: none; background: linear-gradient(45deg, var(--gold), #ff8c00);
-            color: #000; font-weight: bold; font-size: 1.1rem; cursor: pointer;
-            transition: 0.3s;
-        }
-        button:hover { transform: scale(1.03); box-shadow: 0 0 20px var(--gold); }
-
-        #display-wish {
-            position: absolute; width: 100%; top: 25%; text-align: center;
-            display: none; z-index: 5; pointer-events: none;
+            padding: 15px 40px; border-radius: 30px; border: none;
+            background: #ffd700; color: #000; font-weight: bold;
+            cursor: pointer; margin-top: 15px; font-size: 1.1rem;
         }
 
-        .salil-sign {
-            font-family: 'Brush Script MT', cursive; font-size: 3.5rem;
-            color: var(--gold); margin-top: 20px;
-            text-shadow: 0 0 15px var(--glow); opacity: 0;
-            animation: fadeIn 2s forwards 1s;
+        /* Hidden elements that appear after click */
+        #celebration-area, #music-box { display: none; }
+
+        .signature {
+            font-family: 'Brush Script MT', cursive;
+            font-size: 3rem; color: #ffd700; margin-top: 20px;
         }
 
-        @keyframes fadeIn { to { opacity: 1; } }
-
-        /* Pop Game */
-        #score-board { position: fixed; top: 20px; right: 20px; font-size: 1.2rem; color: var(--gold); z-index: 20; background: rgba(0,0,0,0.4); padding: 10px 20px; border-radius: 20px; display: none;}
-        .balloon { position: absolute; width: 60px; height: 80px; border-radius: 50%; cursor: pointer; z-index: 3; }
+        #pop-game {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 5;
+        }
+        .balloon {
+            position: absolute; width: 50px; height: 70px;
+            border-radius: 50%; cursor: pointer; pointer-events: auto;
+        }
     </style>
 </head>
 <body>
 
-<div class="stars"></div>
-<canvas id="fireworksCanvas"></canvas>
-<div id="score-board">Pop Score: <span id="score">0</span></div>
+    <div id="main-container">
+        <div id="setup-box" class="glass-card">
+            <h1 style="color: #ffd700;">Happy 2026</h1>
+            <p>Ready for Salil's Party?</p>
+            <input type="text" id="userName" placeholder="Your Name">
+            <input type="text" id="favThing" placeholder="Favorite thing in 2026">
+            <button onclick="startParty()">ENTER PARTY</button>
+        </div>
 
-<audio id="bgm" loop>
-    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
-</audio>
+        <div id="music-box" class="glass-card" style="margin-top: 20px;">
+            <p style="margin-top:0;">Press Play for "Haan Main Galat"</p>
+            <iframe id="yt-player" width="300" height="150" 
+                src="https://www.youtube.com/embed/aG2PQ8x9F4g?enablejsapi=1" 
+                frameborder="0" allow="autoplay; encrypted-media"></iframe>
+        </div>
 
-<div id="ui-layer">
-    <h1 style="color: var(--gold); margin: 0;">Happy 2026</h1>
-    <p style="font-size: 0.9rem; opacity: 0.8;">Salil has dedicated a song for you!</p>
-    <input type="text" id="nameInp" placeholder="Your Name">
-    <input type="text" id="favInp" placeholder="Favorite Hobby">
-    <button onclick="launch()">Play Song & Celebrate</button>
-</div>
+        <div id="celebration-area">
+            <h1 id="wish-text" style="font-size: 3.5rem; text-align: center; margin-bottom: 0;"></h1>
+            <p id="sub-wish" style="font-size: 1.5rem; text-align: center;"></p>
+            <div class="signature" style="text-align: center;">— Wishes from Salil</div>
+        </div>
+    </div>
 
-<div id="display-wish">
-    <h1 id="t1" style="font-size: 4.5rem; margin: 0; text-shadow: 0 0 20px #000;"></h1>
-    <h2 id="t2" style="font-weight: 300; color: #ddd; margin-top: 5px;"></h2>
-    <div class="salil-sign">— Best Wishes from Salil</div>
-</div>
+    <div id="pop-game"></div>
 
-<script>
-    const canvas = document.getElementById('fireworksCanvas');
-    const ctx = canvas.getContext('2d');
-    const bgm = document.getElementById('bgm');
-    let particles = [];
-    let score = 0;
-
-    function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    }
-    window.onresize = resize;
-    resize();
-
-    function launch() {
-        // SURE SOLUTION: Audio play must be the first thing in the click function
-        bgm.play();
-
-        const name = document.getElementById('nameInp').value || "Friend";
-        const fav = document.getElementById('favInp').value || "Success";
-
-        document.getElementById('ui-layer').style.display = 'none';
-        document.getElementById('display-wish').style.display = 'block';
-        document.getElementById('score-board').style.display = 'block';
-        
-        document.getElementById('t1').innerText = `Happy New Year, ${name}!`;
-        document.getElementById('t2').innerText = `May you enjoy plenty of ${fav} in 2026!`;
-
-        startBalloons();
-        animate();
-    }
-
-    class Particle {
-        constructor(x, y, color) {
-            this.x = x; this.y = y; this.color = color;
-            this.v = { x: (Math.random()-0.5)*12, y: (Math.random()-0.5)*12 };
-            this.a = 1;
+    <script>
+        // Create random background stars
+        for (let i = 0; i < 100; i++) {
+            let star = document.createElement('div');
+            star.className = 'star';
+            let size = Math.random() * 3 + 'px';
+            star.style.width = size; star.style.height = size;
+            star.style.left = Math.random() * 100 + 'vw';
+            star.style.top = Math.random() * 100 + 'vh';
+            star.style.setProperty('--d', (Math.random() * 3 + 2) + 's');
+            document.body.appendChild(star);
         }
-        update() { this.x += this.v.x; this.y += this.v.y; this.v.y += 0.1; this.a -= 0.02; }
-        draw() {
-            ctx.globalAlpha = this.a;
-            ctx.fillStyle = this.color;
-            ctx.beginPath(); ctx.arc(this.x, this.y, 3, 0, Math.PI*2); ctx.fill();
+
+        function startParty() {
+            const name = document.getElementById('userName').value || "Friend";
+            const fav = document.getElementById('favThing').value || "Joy";
+
+            document.getElementById('setup-box').style.display = 'none';
+            document.getElementById('music-box').style.display = 'block';
+            document.getElementById('celebration-area').style.display = 'block';
+
+            document.getElementById('wish-text').innerText = "Happy New Year, " + name + "!";
+            document.getElementById('sub-wish').innerText = "Let's rock " + fav + " in 2026!";
+
+            spawnBalloons();
         }
-    }
 
-    function popEffect(x, y) {
-        for(let i=0; i<40; i++) particles.push(new Particle(x, y, `hsl(${Math.random()*360}, 100%, 65%)`));
-    }
+        function spawnBalloons() {
+            const game = document.getElementById('pop-game');
+            setInterval(() => {
+                const b = document.createElement('div');
+                b.className = 'balloon';
+                b.style.background = `hsl(${Math.random() * 360}, 70%, 60%)`;
+                b.style.left = Math.random() * 90 + 'vw';
+                b.style.bottom = '-100px';
+                
+                let pos = -100;
+                const move = setInterval(() => {
+                    pos += 3;
+                    b.style.bottom = pos + 'px';
+                    if (pos > window.innerHeight) { clearInterval(move); b.remove(); }
+                }, 20);
 
-    function startBalloons() {
-        setInterval(() => {
-            const b = document.createElement('div');
-            b.className = 'balloon';
-            b.style.left = Math.random() * 90 + 'vw';
-            b.style.bottom = '-100px';
-            b.style.background = `hsla(${Math.random()*360}, 80%, 60%, 0.8)`;
-            
-            let pos = -100;
-            const move = setInterval(() => {
-                pos += 2.5;
-                b.style.bottom = pos + 'px';
-                b.style.transform = `translateX(${Math.sin(pos/50)*20}px)`;
-                if(pos > window.innerHeight + 100) { clearInterval(move); b.remove(); }
-            }, 20);
-
-            b.onclick = () => {
-                score++;
-                document.getElementById('score').innerText = score;
-                popEffect(b.offsetLeft + 30, window.innerHeight - b.offsetTop - 40);
-                const rect = b.getBoundingClientRect();
-                popEffect(rect.left + 30, rect.top + 40);
-                clearInterval(move); b.remove();
-            };
-            document.body.appendChild(b);
-        }, 1200);
-    }
-
-    function animate() {
-        ctx.fillStyle = 'rgba(2, 1, 17, 0.2)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        particles.forEach((p, i) => {
-            if(p.a <= 0) particles.splice(i, 1);
-            else { p.update(); p.draw(); }
-        });
-        requestAnimationFrame(animate);
-    }
-</script>
+                b.onclick = () => {
+                    b.style.transform = 'scale(2)';
+                    b.style.opacity = '0';
+                    setTimeout(() => b.remove(), 100);
+                };
+                game.appendChild(b);
+            }, 1000);
+        }
+    </script>
 </body>
 </html>
