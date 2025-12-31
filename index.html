@@ -7,14 +7,14 @@
     <style>
         :root {
             --primary-gold: #ffd700;
-            --accent-blue: #00d4ff;
+            --accent-pink: #ff007f;
         }
 
         body, html {
             margin: 0; padding: 0;
             width: 100%; height: 100%;
             overflow: hidden;
-            font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             background: #050510;
             color: white;
         }
@@ -38,7 +38,7 @@
         input {
             display: block; width: 260px; margin: 1.5rem auto;
             padding: 15px; border-radius: 12px; border: none;
-            background: rgba(255, 255, 255, 0.9); font-size: 1rem;
+            background: rgba(255, 255, 255, 0.9); font-size: 1rem; color: #000;
         }
 
         button {
@@ -54,38 +54,43 @@
         #greeting-display {
             position: absolute; width: 100%; top: 25%;
             text-align: center; z-index: 5;
-            display: none; animation: zoomIn 1.5s ease;
+            display: none;
         }
 
         .salil-signature {
             font-family: 'Brush Script MT', cursive;
             font-size: 3rem; color: var(--primary-gold);
-            margin-top: 30px; text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+            margin-top: 30px; opacity: 0;
+            animation: fadeIn 2s forwards 1.5s;
         }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         /* Now Playing Widget */
         #music-widget {
             position: fixed; bottom: 20px; left: 20px;
             background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(10px);
-            padding: 10px 20px;
+            padding: 12px 25px;
             border-radius: 50px;
             display: none;
             align-items: center;
-            gap: 12px;
+            gap: 15px;
             border: 1px solid rgba(255,255,255,0.2);
             z-index: 100;
         }
 
-        .music-icon { font-size: 1.5rem; animation: pulse 2s infinite; }
+        .music-bars { display: flex; align-items: flex-end; gap: 3px; height: 20px; }
+        .bar { width: 3px; background: var(--primary-gold); animation: dance 1s infinite; }
+        .bar:nth-child(2) { animation-delay: 0.2s; }
+        .bar:nth-child(3) { animation-delay: 0.4s; }
 
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.2); opacity: 0.7; }
-            100% { transform: scale(1); opacity: 1; }
+        @keyframes dance { 
+            0%, 100% { height: 5px; } 
+            50% { height: 20px; } 
         }
 
-        /* Score & Game Elements */
+        /* Game Elements */
         #score-board {
             position: fixed; top: 20px; right: 20px;
             font-size: 1.2rem; color: var(--primary-gold);
@@ -97,9 +102,8 @@
             position: absolute; width: 65px; height: 85px;
             border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
             cursor: pointer; z-index: 3;
+            box-shadow: inset -8px -8px 15px rgba(0,0,0,0.2);
         }
-
-        @keyframes zoomIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
     </style>
 </head>
 <body>
@@ -107,7 +111,7 @@
     <canvas id="fireworksCanvas"></canvas>
 
     <audio id="bgm" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+        <source src="https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Ketsa/Raising_Frequency/Ketsa_-_04_-_Raising_Frequency.mp3" type="audio/mpeg">
     </audio>
 
     <audio id="popSound">
@@ -115,35 +119,37 @@
     </audio>
 
     <div id="music-widget">
-        <div class="music-icon">🎵</div>
+        <div class="music-bars">
+            <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+        </div>
         <div>
-            <div style="font-size: 0.7rem; color: #aaa; text-transform: uppercase;">Now Playing</div>
-            <div id="song-name" style="font-size: 0.9rem; font-weight: bold;">New Year Serenade 2026</div>
+            <div style="font-size: 0.65rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px;">Now Playing</div>
+            <div id="song-name" style="font-size: 0.95rem; font-weight: bold;">Haan Main Galat</div>
+            <div style="font-size: 0.75rem; color: var(--primary-gold);">Pritam, Arijit Singh</div>
         </div>
     </div>
 
     <div id="setup-screen">
-        <h1 style="color: var(--primary-gold); margin: 0;">2026 Greetings</h1>
-        <p style="opacity: 0.8;">Salil has a surprise for you...</p>
-        <input type="text" id="userName" placeholder="Enter Your Name">
-        <input type="text" id="userFavorite" placeholder="Favorite Hobby?">
-        <button onclick="startCelebration()">Enter Celebration</button>
+        <h1 style="color: var(--primary-gold); margin: 0;">Happy New Year 2026</h1>
+        <p style="opacity: 0.8; font-size: 0.9rem;">Turn sound on for the best experience!</p>
+        <input type="text" id="userName" placeholder="Your Name">
+        <input type="text" id="userFavorite" placeholder="Your Favorite Thing">
+        <button onclick="startCelebration()">Start Celebration</button>
     </div>
 
     <div id="greeting-display">
-        <h1 id="main-wish" style="font-size: 4rem; margin-bottom: 0;"></h1>
-        <h3 id="fav-wish" style="font-weight: 300; margin-top: 10px;"></h3>
-        <div class="salil-signature">— Best Wishes from Salil (creator)</div>
+        <h1 id="main-wish" style="font-size: 4rem; margin-bottom: 0; text-shadow: 0 0 20px rgba(255,255,255,0.3);"></h1>
+        <h3 id="fav-wish" style="font-weight: 300; margin-top: 10px; color: #ddd;"></h3>
+        <div class="salil-signature">— Wishes from Salil</div>
     </div>
 
-    <div id="score-board">Balloons Popped: <span id="score">0</span></div>
+    <div id="score-board">Pops: <span id="score">0</span></div>
 
     <script>
         const canvas = document.getElementById('fireworksCanvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
         let score = 0;
-        let mouseX = 0, mouseY = 0;
 
         function resize() {
             canvas.width = window.innerWidth;
@@ -152,47 +158,34 @@
         window.addEventListener('resize', resize);
         resize();
 
-        // Track mouse for sparkle trail
-        window.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-            // Create subtle sparkles on move
-            if(Math.random() > 0.8) createExplosion(mouseX, mouseY, 1, '#ffd700');
-        });
-
         class Particle {
-            constructor(x, y, color, speedMult = 1) {
+            constructor(x, y, color) {
                 this.x = x; this.y = y; this.color = color;
-                this.velocity = { 
-                    x: (Math.random() - 0.5) * (10 * speedMult), 
-                    y: (Math.random() - 0.5) * (10 * speedMult) 
-                };
+                this.velocity = { x: (Math.random() - 0.5) * 12, y: (Math.random() - 0.5) * 12 };
                 this.alpha = 1;
             }
             draw() {
                 ctx.save(); ctx.globalAlpha = this.alpha;
-                ctx.beginPath(); ctx.arc(this.x, this.y, 2.5, 0, Math.PI * 2);
+                ctx.beginPath(); ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
                 ctx.fillStyle = this.color; ctx.fill(); ctx.restore();
             }
             update() {
                 this.x += this.velocity.x; this.y += this.velocity.y;
-                this.velocity.y += 0.08; this.alpha -= 0.015;
+                this.velocity.y += 0.1; this.alpha -= 0.015;
             }
         }
 
-        function createExplosion(x, y, count = 30, color = null) {
-            for (let i = 0; i < count; i++) {
-                const pColor = color || `hsl(${Math.random() * 360}, 100%, 60%)`;
-                particles.push(new Particle(x, y, pColor));
+        function createExplosion(x, y) {
+            for (let i = 0; i < 40; i++) {
+                particles.push(new Particle(x, y, `hsl(${Math.random() * 360}, 100%, 65%)`));
             }
         }
 
         function startCelebration() {
-            const music = document.getElementById('bgm');
-            music.play();
+            document.getElementById('bgm').play();
             
-            const name = document.getElementById('userName').value || "Guest";
-            const fav = document.getElementById('userFavorite').value || "life";
+            const name = document.getElementById('userName').value || "Friend";
+            const fav = document.getElementById('userFavorite').value || "Success";
             
             document.getElementById('setup-screen').style.display = 'none';
             document.getElementById('greeting-display').style.display = 'block';
@@ -200,32 +193,32 @@
             document.getElementById('music-widget').style.display = 'flex';
             
             document.getElementById('main-wish').innerText = `Happy New Year, ${name}!`;
-            document.getElementById('fav-wish').innerText = `Wishing you incredible success in ${fav}!`;
+            document.getElementById('fav-wish').innerText = `May 2026 bring you endless ${fav}!`;
 
             spawnBalloons();
             animate();
-
-            // Periodic automatic fireworks
+            
+            // Auto-fireworks
             setInterval(() => {
-                createExplosion(Math.random() * canvas.width, Math.random() * canvas.height * 0.5);
-            }, 3000);
+                createExplosion(Math.random() * canvas.width, Math.random() * canvas.height * 0.4);
+            }, 2500);
         }
 
         function spawnBalloons() {
             setInterval(() => {
                 const b = document.createElement('div');
                 b.className = 'balloon';
-                b.style.background = `hsla(${Math.random() * 360}, 80%, 60%, 0.8)`;
+                b.style.background = `hsla(${Math.random() * 360}, 75%, 60%, 0.85)`;
                 b.style.left = Math.random() * 90 + 'vw';
                 b.style.bottom = '-100px';
                 
                 let pos = -100;
-                let speed = 2 + Math.random() * 2;
+                let speed = 2.5 + Math.random() * 2;
 
                 const move = setInterval(() => {
                     pos += speed;
                     b.style.bottom = pos + 'px';
-                    b.style.transform = `rotate(${Math.sin(pos/50) * 10}deg)`;
+                    b.style.transform = `translateX(${Math.sin(pos/40) * 15}px)`;
                     if (pos > window.innerHeight + 100) { clearInterval(move); b.remove(); }
                 }, 20);
 
@@ -235,15 +228,15 @@
                     score++;
                     document.getElementById('score').innerText = score;
                     const rect = b.getBoundingClientRect();
-                    createExplosion(rect.left + 30, rect.top + 40);
+                    createExplosion(rect.left + 32, rect.top + 42);
                     clearInterval(move); b.remove();
                 };
                 document.body.appendChild(b);
-            }, 1200);
+            }, 1000);
         }
 
         function animate() {
-            ctx.fillStyle = 'rgba(5, 5, 16, 0.2)';
+            ctx.fillStyle = 'rgba(5, 5, 16, 0.25)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             particles.forEach((p, i) => {
                 if (p.alpha <= 0) particles.splice(i, 1);
@@ -254,4 +247,3 @@
     </script>
 </body>
 </html>
-
