@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>🎆 Happy New Year 2026 🎆</title>
+<style>
+html,body{
+  margin:0;padding:0;
+  width:100%;height:100%;
+  font-family:'Trebuchet MS',sans-serif;
+  overflow:hidden;
+  background:linear-gradient(120deg,#020024,#090979,#004e92,#000000);
+  background-size:400% 400%;
+  animation:bgMove 20s ease infinite;
+  color:#fff2b0;
+  text-align:center;
+}
+@keyframes bgMove{
+ 0%{background-position:0% 50%}
+ 50%{background-position:100% 50%}
+ 100%{background-position:0% 50%}
+}
+h1{margin-top:40px;font-size:46px;text-shadow:0 0 20px gold;}
+.card{
+  width:80%;max-width:480px;
+  margin:60px auto;
+  background:rgba(0,0,0,0.6);
+  padding:25px;
+  border-radius:20px;
+  animation:fade 1.2s;
+}
+@keyframes fade{from{opacity:0;transform:translateY(30px)}to{opacity:1}}
+input,button{
+  padding:10px;
+  border:none;
+  border-radius:12px;
+  font-size:16px;
+  width:80%;
+}
+button{background:gold;color:#000;cursor:pointer;margin-top:15px;}
+#clock,#countdown{font-size:18px;margin-top:10px;}
+.fire{
+  position:absolute;width:8px;height:8px;border-radius:50%;
+  background:yellow;animation:boom 0.9s ease-out forwards;
+}
+@keyframes boom{to{transform:scale(15);opacity:0}}
+.lamp{
+  position:absolute;
+  width:14px;height:20px;
+  background:orange;
+  border-radius:4px;
+  box-shadow:0 0 10px gold;
+  animation:float 10s linear forwards;
+}
+@keyframes float{to{transform:translateY(-120vh);opacity:0}}
+</style>
+</head>
+<body onclick="createCrackers(event)">
+
+<h1>✨ Happy New Year 2026 ✨</h1>
+<div id="clock"></div>
+<div id="countdown"></div>
+
+<div class="card" id="startBox">
+  <p>Tap START to begin the New Year celebration 🎉</p>
+  <button onclick="start()">START</button>
+</div>
+
+<div class="card" id="qBox" style="display:none;">
+  <p id="qText">What is your name?</p>
+  <input id="ans" placeholder="Type here..."><br>
+  <button onclick="nextQ()">Continue</button>
+  <div id="wish" style="margin-top:15px;"></div>
+</div>
+
+<audio id="bgMusic" loop>
+  <source src="https://cdn.pixabay.com/audio/2022/10/25/audio_5ff44f9bb2.mp3">
+</audio>
+<audio id="crackerSound">
+  <source src="https://cdn.pixabay.com/audio/2023/03/15/audio_f3b104cc92.mp3">
+</audio>
+
+<script>
+let step=0,name="",habit="",dream="";
+const questions = [
+ "What is your name?",
+ "One habit you want to follow in 2026?",
+ "One dream you won’t abandon?"
+];
+
+const startBox = document.getElementById("startBox");
+const qBox = document.getElementById("qBox");
+const qText = document.getElementById("qText");
+const ans = document.getElementById("ans");
+const wish = document.getElementById("wish");
+const bgMusic = document.getElementById("bgMusic");
+const crackerSound = document.getElementById("crackerSound");
+
+function start(){
+  startBox.style.display="none";
+  qBox.style.display="block";
+  bgMusic.play();
+  setInterval(updateClock,1000);
+  setInterval(updateCountdown,1000);
+  setInterval(createLamp,2000);
+}
+
+function nextQ(){
+  const val = ans.value.trim();
+  if(!val) return alert("Please type something.");
+  if(step==0) name=val;
+  if(step==1) habit=val;
+  if(step==2){ dream=val; showWish();}
+  step++;
+  if(step<questions.length){
+    qText.innerText = questions[step];
+    ans.value = "";
+  }
+}
+
+function showWish(){
+  qBox.innerHTML=
+    `<p style="font-size:20px">
+      Dear <b>${name}</b>,<br><br>
+      Stay loyal to <b>${habit}</b> and never abandon your dream — <b>${dream}</b>.<br>
+      Let every lamp remind you of hope, and every cracker of fresh beginnings.<br><br>
+      ✨ Happy New Year 2026 ✨<br>— Salil
+    </p>`;
+}
+
+function createCrackers(e){
+  crackerSound.currentTime=0;
+  crackerSound.play();
+  for(let i=0;i<10;i++){
+    const c=document.createElement("div");
+    c.className="fire";
+    c.style.left=(e.clientX + Math.random()*100 -50)+"px";
+    c.style.top=(e.clientY + Math.random()*100 -50)+"px";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),900);
+  }
+}
+
+function createLamp(){
+  const l = document.createElement("div");
+  l.className="lamp";
+  l.style.left=Math.random()*100+"vw";
+  document.body.appendChild(l);
+  setTimeout(()=>l.remove(),10000);
+}
+
+// Clock
+function updateClock(){
+  const now = new Date();
+  document.getElementById("clock").innerText = now.toLocaleTimeString();
+}
+
+// Countdown
+function updateCountdown(){
+  const ny = new Date("Jan 1, 2026 00:00:00").getTime();
+  const now = new Date().getTime();
+  const diff = ny - now;
+  if(diff<0) return;
+  const d = Math.floor(diff/(1000*60*60*24));
+  const h = Math.floor((diff%(1000*60*60*24))/(1000*60*60));
+  const m = Math.floor((diff%(1000*60*60))/(1000*60));
+  const s = Math.floor((diff%(1000*60))/1000);
+  document.getElementById("countdown").innerText = `⏳ ${d}d ${h}h ${m}m ${s}s left`;
+}
+</script>
+</body>
+</html>
