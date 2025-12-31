@@ -118,13 +118,26 @@
     }
 
     function go() {
-        const inputName = document.getElementById('name').value.trim();
-        
-        // Block name Salil
-        if (inputName.toLowerCase() === "salil") {
-            document.getElementById('err').style.display = "block";
-            return;
-        }
+    const inputName = document.getElementById('name').value.trim();
+    
+    // List of all reserved names to block
+    const blockedNames = [
+        "salil", 
+        " salil kumar jha", 
+        "siddharth kumar jha ",
+        "achal kumar jha"
+         " achal"
+    ];
+
+    // Check if the entered name matches any in our list
+    if (blockedNames.includes(inputName.toLowerCase())) {
+        const errorElement = document.getElementById('err');
+        errorElement.style.display = "block";
+        errorElement.innerText = "❌ Doraemon says: This name is reserved for the host!";
+        return;
+    }
+
+    // ... rest of your go() function code follows
 
         // Trigger autoplay inside the click event to satisfy browser security
         const p = document.getElementById('player');
@@ -193,3 +206,4 @@
 </script>
 </body>
 </html>
+
