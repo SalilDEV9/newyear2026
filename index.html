@@ -2,115 +2,122 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Doraemon New Year 2026 - Salil Edition</title>
+    <title>Happy 2026 from Salil</title>
     <style>
-        :root { --gold: #ffd700; --doraemon-blue: #0096d7; --neon-red: #ff3131; }
+        :root { --gold: #ffd700; --dora-blue: #0096d7; }
         
         body, html {
             margin: 0; padding: 0; height: 100%; overflow: hidden;
             font-family: 'Comic Sans MS', cursive;
-            background: #020111;
-            background: linear-gradient(to bottom, #020111 0%, #050b30 100%);
+            background: radial-gradient(circle at center, #0b0e2e 0%, #020111 100%);
             color: white;
         }
 
-        /* Fireworks Canvas */
-        #fw-canvas { position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none; }
+        canvas { position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none; }
 
-        /* Doraemon & Speech Bubble */
-        .doraemon-container {
-            position: fixed; bottom: 20px; right: 20px; z-index: 100;
+        /* Main Center Layout */
+        #content-wrapper {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 100; text-align: center; width: 90%; max-width: 500px;
+            display: none;
+        }
+
+        .glass-panel {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(15px);
+            padding: 20px; border-radius: 30px;
+            border: 2px solid var(--gold);
+            box-shadow: 0 0 40px rgba(0,0,0,0.8);
+        }
+
+        /* Song Player in Center */
+        #music-frame {
+            margin: 20px 0; border-radius: 15px; overflow: hidden;
+            border: 3px solid var(--dora-blue);
+        }
+
+        /* Doraemon Floating */
+        .dora-container {
+            position: fixed; bottom: 20px; right: 20px; z-index: 150;
             display: flex; flex-direction: column; align-items: center;
         }
-        .speech-bubble {
-            background: white; color: black; padding: 10px 15px;
-            border-radius: 20px; margin-bottom: 10px; position: relative;
-            font-weight: bold; font-size: 0.9rem; border: 2px solid var(--doraemon-blue);
-            display: none; animation: popIn 0.5s ease;
+        .speech {
+            background: white; color: black; padding: 8px 12px; border-radius: 15px;
+            margin-bottom: 5px; font-weight: bold; border: 2px solid var(--dora-blue);
+            font-size: 0.8rem; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         }
-        .speech-bubble::after {
-            content: ''; position: absolute; bottom: -10px; right: 20px;
-            border-width: 10px 10px 0; border-style: solid; border-color: white transparent;
-        }
-        .doraemon-img { width: 140px; animation: float 3s ease-in-out infinite; }
+        .dora-img { width: 110px; animation: float 3s ease-in-out infinite; }
 
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-        @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
 
         /* Setup Screen */
         #setup-box {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            z-index: 200; background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(15px); padding: 40px; border-radius: 30px;
-            border: 3px solid var(--gold); text-align: center; width: 320px;
+            z-index: 200; background: rgba(0, 0, 0, 0.9);
+            padding: 30px; border-radius: 30px; border: 2px solid var(--gold);
+            text-align: center; width: 300px;
         }
 
-        input {
-            width: 85%; padding: 15px; margin: 10px 0; border-radius: 15px;
-            border: none; font-size: 1rem;
+        input { width: 85%; padding: 12px; margin: 10px 0; border-radius: 10px; border: none; }
+        button { 
+            padding: 12px 30px; border-radius: 25px; border: none; 
+            background: #ff3131; color: white; cursor: pointer; font-weight: bold; font-size: 1rem;
         }
 
-        button {
-            padding: 15px 40px; border-radius: 30px; border: none;
-            background: var(--neon-red); color: white; font-weight: bold;
-            cursor: pointer; font-size: 1.1rem; margin-top: 10px;
-        }
-
-        /* Bubble Game UI */
-        #ui-stats {
+        /* Game Elements */
+        #score-pill {
             position: fixed; top: 20px; left: 20px; z-index: 150;
-            background: rgba(0, 150, 215, 0.4); padding: 10px 25px;
-            border-radius: 50px; border: 2px solid white; display: none;
+            background: rgba(0,0,0,0.6); padding: 10px 20px; border-radius: 30px;
+            border: 1px solid var(--gold); font-size: 1.2rem;
         }
 
-        .bubble {
-            position: absolute; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4), rgba(255,255,255,0.1));
-            border: 1px solid rgba(255,255,255,0.4); border-radius: 50%;
-            cursor: pointer; z-index: 50; backdrop-filter: blur(2px);
+        .balloon {
+            position: absolute; width: 60px; height: 80px; border-radius: 50%;
+            cursor: pointer; z-index: 50; box-shadow: inset -5px -5px 15px rgba(0,0,0,0.3);
         }
 
-        #wish-area {
-            position: absolute; top: 20%; width: 100%; text-align: center;
-            display: none; z-index: 10; pointer-events: none;
-        }
-        
-        #music-box {
-            position: fixed; bottom: 20px; left: 20px; z-index: 100;
-            background: rgba(255,255,255,0.1); padding: 10px; border-radius: 15px; display: none;
+        .signature {
+            font-family: cursive; font-size: 2.5rem; color: var(--gold);
+            margin-top: 15px; text-shadow: 0 0 10px rgba(255,215,0,0.5);
         }
     </style>
 </head>
 <body>
 
-<canvas id="fw-canvas"></canvas>
+<canvas id="canvas"></canvas>
 
-<div id="ui-stats">🫧 Bubbles Popped: <span id="score">0</span></div>
+<div id="score-pill" style="display: none;">🫧 Pops: <span id="score">0</span></div>
 
-<div id="music-box">
-    <div style="font-size: 0.7rem; margin-bottom:5px;">Now Playing: Haan Main Galat</div>
-    <iframe width="250" height="80" src="https://www.youtube.com/embed/aG2PQ8x9F4g" frameborder="0"></iframe>
-</div>
-
-<div class="doraemon-container">
-    <div class="speech-bubble" id="dora-talk">Happy New Year!</div>
-    <img src="https://upload.wikimedia.org/wikipedia/en/b/bd/Doraemon_character.png" class="doraemon-img" alt="Doraemon">
+<div class="dora-container">
+    <div class="speech" id="dora-msg" style="display: none;">Happy 2026!</div>
+    <img src="https://upload.wikimedia.org/wikipedia/en/b/bd/Doraemon_character.png" class="dora-img">
 </div>
 
 <div id="setup-box">
-    <h2 style="color: var(--gold); margin-top:0;">2026 Time Machine</h2>
-    <input type="text" id="uName" placeholder="Enter Name">
-    <input type="text" id="uFav" placeholder="Enter Favorite Thing">
-    <button onclick="startCelebration()">Let's Go! 🚀</button>
+    <h2 style="color: var(--gold); margin:0;">Salil's Celebration</h2>
+    <input type="text" id="nameIn" placeholder="Your Name">
+    <input type="text" id="favIn" placeholder="Your Favorite Hobby">
+    <button onclick="startParty()">START PARTY 🚀</button>
 </div>
 
-<div id="wish-area">
-    <h1 id="mTitle" style="font-size: 3.5rem; margin: 0; text-shadow: 0 0 15px var(--doraemon-blue);"></h1>
-    <h2 id="sTitle" style="color: var(--gold); font-weight: normal;"></h2>
-    <div style="font-family: 'Brush Script MT', cursive; font-size: 3rem; color: var(--gold);">— From Salil</div>
+<div id="content-wrapper">
+    <div class="glass-panel">
+        <h1 id="mTitle" style="font-size: 2.5rem; margin:0; color: white;"></h1>
+        <p id="sTitle" style="color: #ccc; margin: 5px 0;"></p>
+        
+        <div id="music-frame">
+            <iframe width="100%" height="200" 
+                src="https://www.youtube.com/embed/aG2PQ8x9F4g?rel=0" 
+                frameborder="0" allow="autoplay; encrypted-media">
+            </iframe>
+        </div>
+
+        <div class="signature">— From Salil</div>
+    </div>
 </div>
 
 <script>
-    const canvas = document.getElementById('fw-canvas');
+    const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
     let score = 0;
@@ -122,79 +129,80 @@
     window.onresize = resize;
     resize();
 
-    function startCelebration() {
-        const name = document.getElementById('uName').value || "Friend";
-        const fav = document.getElementById('uFav').value || "Smiles";
+    function startParty() {
+        const uName = document.getElementById('nameIn').value || "Friend";
+        const uFav = document.getElementById('favIn').value || "Happiness";
 
         document.getElementById('setup-box').style.display = 'none';
-        document.getElementById('ui-stats').style.display = 'block';
-        document.getElementById('music-box').style.display = 'block';
-        document.getElementById('wish-area').style.display = 'block';
-        document.getElementById('dora-talk').style.display = 'block';
+        document.getElementById('content-wrapper').style.display = 'block';
+        document.getElementById('score-pill').style.display = 'block';
+        document.getElementById('dora-msg').style.display = 'block';
 
-        document.getElementById('mTitle').innerText = "Happy New Year, " + name + "!";
-        document.getElementById('sTitle').innerText = "Salil hopes your 2026 is full of " + fav + "!";
+        document.getElementById('mTitle').innerText = "Happy New Year, " + uName + "!";
+        document.getElementById('sTitle').innerText = "May 2026 bring you endless " + uFav + "!";
 
-        setInterval(spawnBubble, 700);
         animate();
-        
-        // Doraemon change text
-        const phrases = ["Great pop!", "2026 is awesome!", "Pop more bubbles!", "Salil says Hi!", "Magic is real!"];
-        setInterval(() => {
-            document.getElementById('dora-talk').innerText = phrases[Math.floor(Math.random()*phrases.length)];
-        }, 4000);
+        setInterval(spawnBalloon, 1000);
+        // Random Background Fireworks
+        setInterval(() => burstEffect(Math.random()*canvas.width, Math.random()*canvas.height*0.4), 2500);
     }
 
-    function spawnBubble() {
+    class Particle {
+        constructor(x, y, color) {
+            this.x = x; this.y = y; this.color = color;
+            this.v = { x: (Math.random()-0.5)*12, y: (Math.random()-0.5)*12 };
+            this.a = 1;
+        }
+        update() { this.x += this.v.x; this.y += this.v.y; this.v.y += 0.15; this.a -= 0.02; }
+        draw() {
+            ctx.globalAlpha = this.a;
+            ctx.fillStyle = this.color;
+            ctx.beginPath(); ctx.arc(this.x, this.y, 3, 0, Math.PI*2); ctx.fill();
+        }
+    }
+
+    function burstEffect(x, y, color) {
+        for(let i=0; i<35; i++) {
+            particles.push(new Particle(x, y, color || `hsl(${Math.random()*360}, 100%, 65%)`));
+        }
+    }
+
+    function spawnBalloon() {
         const b = document.createElement('div');
-        const size = Math.random() * 50 + 40;
-        b.className = 'bubble';
-        b.style.width = size + 'px';
-        b.style.height = size + 'px';
-        b.style.left = Math.random() * 90 + 'vw';
+        const color = `hsl(${Math.random()*360}, 80%, 60%)`;
+        b.className = 'balloon';
+        b.style.background = color;
+        b.style.left = Math.random() * 85 + 'vw';
         b.style.bottom = '-100px';
         
         let pos = -100;
         const move = setInterval(() => {
-            pos += 2.5;
+            pos += 3;
             b.style.bottom = pos + 'px';
-            if(pos > window.innerHeight) { clearInterval(move); b.remove(); }
+            if(pos > window.innerHeight + 100) { clearInterval(move); b.remove(); }
         }, 20);
 
         b.onclick = () => {
             score++;
             document.getElementById('score').innerText = score;
-            createExplosion(b.offsetLeft + (size/2), window.innerHeight - b.offsetTop - (size/2));
-            clearInterval(move);
+            const rect = b.getBoundingClientRect();
+            // Burst into particles of its own color!
+            burstEffect(rect.left + 30, rect.top + 40, color);
             b.remove();
+            clearInterval(move);
+            
+            document.getElementById('dora-msg').innerText = "Awesome pop!";
+            setTimeout(() => { document.getElementById('dora-msg').innerText = "Happy 2026!"; }, 1500);
         };
         document.body.appendChild(b);
     }
 
-    function createExplosion(x, y) {
-        for(let i=0; i<30; i++) {
-            particles.push({
-                x: x, y: y,
-                vx: (Math.random()-0.5)*12,
-                vy: (Math.random()-0.5)*12,
-                a: 1,
-                c: `hsl(${Math.random()*360}, 100%, 70%)`
-            });
-        }
-    }
-
     function animate() {
-        ctx.fillStyle = 'rgba(2, 1, 17, 0.2)';
+        ctx.fillStyle = 'rgba(2, 1, 17, 0.25)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
         particles.forEach((p, i) => {
-            p.x += p.vx; p.y += p.vy;
-            p.vy += 0.15; p.a -= 0.02;
             if(p.a <= 0) particles.splice(i, 1);
-            
-            ctx.globalAlpha = p.a;
-            ctx.fillStyle = p.c;
-            ctx.beginPath(); ctx.arc(p.x, p.y, 3, 0, Math.PI*2); ctx.fill();
+            else { p.update(); p.draw(); }
         });
         requestAnimationFrame(animate);
     }
