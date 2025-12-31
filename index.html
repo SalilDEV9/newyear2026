@@ -3,139 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy New Year 2026</title>
+    <title>Happy New Year 2026 - From Salil</title>
     <style>
         :root {
             --primary-gold: #ffd700;
             --deep-blue: #0a0a23;
-            --accent-pink: #ff007f;
         }
 
         body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
             overflow: hidden;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: radial-gradient(circle at center, #1a1a3a 0%, #050510 100%);
+            font-family: 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
+            background: #050510;
             color: white;
         }
 
-        canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1;
-            pointer-events: none;
-        }
+        canvas { position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none; }
 
-        /* Input Form Container */
         #setup-screen {
-            position: absolute;
-            top: 50%;
-            left: 50%;
+            position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             z-index: 10;
             background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
-            padding: 2rem;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+            padding: 3rem;
+            border-radius: 30px;
             text-align: center;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-            transition: opacity 0.8s ease;
+            border: 2px solid var(--primary-gold);
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.2);
         }
 
         input {
-            display: block;
-            width: 80%;
-            margin: 1rem auto;
-            padding: 12px;
-            border-radius: 8px;
-            border: none;
-            background: rgba(255, 255, 255, 0.9);
+            display: block; width: 250px; margin: 1.5rem auto;
+            padding: 15px; border-radius: 12px; border: none;
             font-size: 1rem;
         }
 
         button {
-            padding: 12px 30px;
-            background: var(--primary-gold);
-            border: none;
-            border-radius: 25px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 1.1rem;
-            transition: transform 0.2s;
+            padding: 15px 40px; background: linear-gradient(45deg, #ffd700, #ffa500);
+            border: none; border-radius: 30px; font-weight: bold;
+            cursor: pointer; font-size: 1.2rem; color: #333;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
         }
 
-        button:hover {
-            transform: scale(1.05);
-            background: #fff;
-        }
-
-        /* Main Display Area */
         #greeting-display {
-            position: absolute;
-            width: 100%;
-            top: 40%;
-            text-align: center;
-            z-index: 5;
+            position: absolute; width: 100%; top: 30%;
+            text-align: center; z-index: 5;
             display: none;
+        }
+
+        .salil-signature {
+            font-family: 'Brush Script MT', cursive;
+            font-size: 2.5rem;
+            color: var(--primary-gold);
+            margin-top: 20px;
             opacity: 0;
-            transition: opacity 1.5s ease;
+            animation: fadeInSignature 3s forwards 1s;
         }
 
-        .reveal-text {
-            font-size: 4rem;
-            font-weight: 900;
-            background: linear-gradient(to right, #fff, var(--primary-gold), #fff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-            margin-bottom: 10px;
-        }
-
-        .sub-text {
-            font-size: 1.5rem;
-            color: #ddd;
-        }
-
-        /* Mini Game Styles */
-        #game-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 2;
-            pointer-events: auto;
-            display: none;
+        @keyframes fadeInSignature {
+            to { opacity: 1; transform: translateY(-10px); }
         }
 
         .balloon {
-            position: absolute;
-            width: 50px;
-            height: 70px;
-            background: radial-gradient(circle at 30% 30%, var(--accent-pink), #800040);
+            position: absolute; width: 70px; height: 90px;
             border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
-            cursor: pointer;
-            animation: float-up 5s linear infinite;
-        }
-
-        @keyframes float-up {
-            from { transform: translateY(110vh); }
-            to { transform: translateY(-20vh); }
+            cursor: pointer; z-index: 3;
+            box-shadow: inset -8px -8px 15px rgba(0,0,0,0.3);
         }
 
         #score-board {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            font-size: 1.5rem;
-            color: var(--primary-gold);
-            display: none;
-            z-index: 100;
+            position: fixed; top: 20px; right: 20px;
+            font-size: 1.5rem; color: var(--primary-gold);
+            z-index: 100; display: none; background: rgba(0,0,0,0.5);
+            padding: 10px 20px; border-radius: 15px;
         }
     </style>
 </head>
@@ -143,31 +85,36 @@
 
     <canvas id="fireworksCanvas"></canvas>
 
+    <audio id="bgm" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="popSound">
+        <source src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" type="audio/mpeg">
+    </audio>
+
     <div id="setup-screen">
-        <h1 style="color: var(--primary-gold)">Welcome 2026</h1>
-        <input type="text" id="userName" placeholder="What is your name?">
-        <input type="text" id="userFavorite" placeholder="Your favorite thing? (e.g. Travel, Coding)">
-        <button onclick="startCelebration()">Start Celebration</button>
+        <h1 style="color: var(--primary-gold); margin-top:0;">2026 Celebration</h1>
+        <p>A special message awaits you...</p>
+        <input type="text" id="userName" placeholder="Enter Your Name">
+        <input type="text" id="userFavorite" placeholder="Something you love">
+        <button onclick="startCelebration()">See My Wish</button>
     </div>
 
     <div id="greeting-display">
-        <div class="reveal-text" id="main-wish">Happy New Year!</div>
-        <div class="sub-text" id="fav-wish"></div>
-        <p style="margin-top: 20px;">Pop the balloons for good luck!</p>
+        <h1 id="main-wish" style="font-size: 4.5rem; margin-bottom: 10px; text-shadow: 0 0 20px #fff;"></h1>
+        <h3 id="fav-wish" style="color: #eee; font-weight: 300; font-size: 1.8rem;"></h3>
+        <div class="salil-signature">— Best Wishes from Salil</div>
     </div>
 
-    <div id="score-board">Balloons Popped: <span id="score">0</span></div>
-    <div id="game-container"></div>
+    <div id="score-board">Pop Count: <span id="score">0</span></div>
 
     <script>
         const canvas = document.getElementById('fireworksCanvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
-        let stars = [];
         let score = 0;
-        let mouseX = 0, mouseY = 0;
 
-        // Initialize Canvas
         function resize() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
@@ -175,142 +122,87 @@
         window.addEventListener('resize', resize);
         resize();
 
-        // Parallax Effect & Mouse Follow
-        window.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-            createFirework(mouseX, mouseY, true); // Sparkle trail
-        });
-
         class Particle {
-            constructor(x, y, color, velocity, size) {
-                this.x = x;
-                this.y = y;
-                this.color = color;
-                this.velocity = velocity;
+            constructor(x, y, color) {
+                this.x = x; this.y = y; this.color = color;
+                this.velocity = { x: (Math.random() - 0.5) * 10, y: (Math.random() - 0.5) * 10 };
                 this.alpha = 1;
-                this.friction = 0.95;
-                this.size = size;
             }
             draw() {
-                ctx.save();
-                ctx.globalAlpha = this.alpha;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = this.color;
-                ctx.fill();
-                ctx.restore();
+                ctx.save(); ctx.globalAlpha = this.alpha;
+                ctx.beginPath(); ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+                ctx.fillStyle = this.color; ctx.fill(); ctx.restore();
             }
             update() {
-                this.velocity.x *= this.friction;
-                this.velocity.y *= this.friction;
-                this.velocity.y += 0.05; // gravity
-                this.x += this.velocity.x;
-                this.y += this.velocity.y;
-                this.alpha -= 0.01;
+                this.x += this.velocity.x; this.y += this.velocity.y;
+                this.velocity.y += 0.1; this.alpha -= 0.02;
             }
         }
 
-        function createFirework(x, y, isTrail = false) {
-            const count = isTrail ? 2 : 50;
-            const colors = ['#ff007f', '#ffd700', '#00fbff', '#ffffff'];
-            for (let i = 0; i < count; i++) {
-                const angle = (Math.PI * 2) / count * i;
-                const speed = isTrail ? Math.random() * 2 : Math.random() * 6 + 2;
-                particles.push(new Particle(
-                    x, y, 
-                    colors[Math.floor(Math.random() * colors.length)], 
-                    { x: Math.cos(angle) * speed, y: Math.sin(angle) * speed },
-                    isTrail ? 1 : 2
-                ));
+        function createExplosion(x, y) {
+            for (let i = 0; i < 40; i++) {
+                particles.push(new Particle(x, y, `hsl(${Math.random() * 360}, 100%, 60%)`));
             }
         }
 
-        // Initialize Background Stars
-        for (let i = 0; i < 150; i++) {
-            stars.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                size: Math.random() * 1.5,
-                speed: Math.random() * 0.5 + 0.1
-            });
+        function startCelebration() {
+            document.getElementById('bgm').play();
+            
+            const name = document.getElementById('userName').value || "Guest";
+            const fav = document.getElementById('userFavorite').value || "happiness";
+            
+            document.getElementById('setup-screen').style.display = 'none';
+            document.getElementById('greeting-display').style.display = 'block';
+            document.getElementById('score-board').style.display = 'block';
+            
+            document.getElementById('main-wish').innerText = `Happy New Year, ${name}!`;
+            document.getElementById('fav-wish').innerText = `May 2026 be filled with ${fav}!`;
+
+            spawnBalloons();
+            animate();
+        }
+
+        function spawnBalloons() {
+            setInterval(() => {
+                const b = document.createElement('div');
+                b.className = 'balloon';
+                b.style.background = `hsla(${Math.random() * 360}, 80%, 60%, 0.8)`;
+                b.style.left = Math.random() * 90 + 'vw';
+                b.style.bottom = '-100px';
+                
+                let pos = -100;
+                let speed = 2 + Math.random() * 2;
+
+                const move = setInterval(() => {
+                    pos += speed;
+                    b.style.bottom = pos + 'px';
+                    if (pos > window.innerHeight + 100) {
+                        clearInterval(move); b.remove();
+                    }
+                }, 20);
+
+                b.onclick = () => {
+                    document.getElementById('popSound').currentTime = 0;
+                    document.getElementById('popSound').play();
+                    score++;
+                    document.getElementById('score').innerText = score;
+                    const rect = b.getBoundingClientRect();
+                    createExplosion(rect.left + 35, rect.top + 45);
+                    clearInterval(move); b.remove();
+                };
+
+                document.body.appendChild(b);
+            }, 1000);
         }
 
         function animate() {
-            ctx.fillStyle = 'rgba(10, 10, 35, 0.2)'; // Fading trail effect
+            ctx.fillStyle = 'rgba(5, 5, 16, 0.2)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Draw Parallax Stars
-            stars.forEach(star => {
-                ctx.fillStyle = '#fff';
-                // Subtle horizontal drift based on mouse
-                let drift = (mouseX - canvas.width/2) * 0.01;
-                ctx.beginPath();
-                ctx.arc(star.x + drift, star.y, star.size, 0, Math.PI*2);
-                ctx.fill();
-                star.y += star.speed;
-                if (star.y > canvas.height) star.y = 0;
-            });
-
             particles.forEach((p, i) => {
-                if (p.alpha <= 0) {
-                    particles.splice(i, 1);
-                } else {
-                    p.update();
-                    p.draw();
-                }
+                if (p.alpha <= 0) particles.splice(i, 1);
+                else { p.update(); p.draw(); }
             });
             requestAnimationFrame(animate);
-        }
-        animate();
-
-        // Main logic
-        function startCelebration() {
-            const name = document.getElementById('userName').value || "Friend";
-            const fav = document.getElementById('userFavorite').value || "your dreams";
-            
-            // UI Transitions
-            document.getElementById('setup-screen').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('setup-screen').style.display = 'none';
-                const greeting = document.getElementById('greeting-display');
-                greeting.style.display = 'block';
-                setTimeout(() => greeting.style.opacity = '1', 50);
-
-                document.getElementById('main-wish').innerText = `Happy New Year, ${name}!`;
-                document.getElementById('fav-wish').innerText = `May 2026 bring endless joy and fun in ${fav}!`;
-                
-                document.getElementById('game-container').style.display = 'block';
-                document.getElementById('score-board').style.display = 'block';
-                startMiniGame();
-                
-                // Automatic Confetti Burst
-                setInterval(() => {
-                    createFirework(Math.random() * canvas.width, Math.random() * canvas.height/2);
-                }, 3000);
-            }, 800);
-        }
-
-        // Mini Game Logic
-        function startMiniGame() {
-            setInterval(() => {
-                const balloon = document.createElement('div');
-                balloon.className = 'balloon';
-                balloon.style.left = Math.random() * 90 + 'vw';
-                balloon.style.filter = `hue-rotate(${Math.random() * 360}deg)`;
-                
-                balloon.onclick = () => {
-                    score++;
-                    document.getElementById('score').innerText = score;
-                    createFirework(parseInt(balloon.style.left) * window.innerWidth / 100, window.innerHeight * 0.5);
-                    balloon.remove();
-                };
-
-                document.getElementById('game-container').appendChild(balloon);
-                
-                // Clean up balloon after animation
-                setTimeout(() => { if(balloon) balloon.remove(); }, 5000);
-            }, 1200);
         }
     </script>
 </body>
