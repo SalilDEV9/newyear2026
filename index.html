@@ -2,32 +2,71 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Happy 2026 - Salil's New Year Party</title>
     <style>
         :root { --gold: #ffd700; --dora: #0096d7; }
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: 'Comic Sans MS', cursive; background: #020111; color: white; }
+        body, html { 
+            margin: 0; padding: 0; height: 100%; overflow: hidden; 
+            font-family: 'Comic Sans MS', cursive; 
+            background: #020111; color: white; 
+        }
         canvas { position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none; }
         
-        /* Center UI */
-        #ui-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 100; text-align: center; display: none; width: 90%; max-width: 500px; }
-        .panel { background: rgba(0,0,0,0.8); backdrop-filter: blur(15px); padding: 30px; border-radius: 30px; border: 2px solid var(--gold); }
+        /* Center UI Panel */
+        #ui-center { 
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+            z-index: 100; text-align: center; display: none; width: 90%; max-width: 500px; 
+        }
+        .panel { 
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(15px); 
+            padding: 30px; border-radius: 30px; border: 2px solid var(--gold); 
+        }
         
-        /* Video Player */
-        #video-box { margin: 20px 0; border-radius: 15px; overflow: hidden; border: 3px solid var(--dora); }
+        /* Video Player Container */
+        #video-box { 
+            margin: 20px 0; border-radius: 15px; overflow: hidden; 
+            border: 3px solid var(--dora); background: #000;
+        }
         
-        /* Login */
-        #login { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 200; background: #000; padding: 40px; border-radius: 30px; border: 2px solid var(--gold); text-align: center; }
-        input { width: 80%; padding: 12px; margin: 10px 0; border-radius: 10px; border: none; }
-        button { padding: 15px 40px; border-radius: 30px; border: none; background: #ff3131; color: #fff; font-weight: bold; cursor: pointer; }
+        /* Login / Setup Box */
+        #login { 
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+            z-index: 200; background: #000; padding: 40px; border-radius: 30px; 
+            border: 2px solid var(--gold); text-align: center; width: 320px; 
+        }
+        input { width: 80%; padding: 12px; margin: 10px 0; border-radius: 10px; border: none; font-size: 1rem; }
+        button { 
+            padding: 15px 40px; border-radius: 30px; border: none; 
+            background: #ff3131; color: #fff; font-weight: bold; cursor: pointer; 
+        }
 
-        /* Doraemon */
+        /* Error Message */
+        #err { color: #ff3131; font-size: 0.8rem; margin-top: 5px; display: none; font-weight: bold; }
+
+        /* Doraemon Guide */
         .dora-box { position: fixed; bottom: 20px; right: 20px; z-index: 150; text-align: center; }
-        .speech { background: white; color: black; padding: 8px; border-radius: 15px; margin-bottom: 5px; font-weight: bold; font-size: 0.8rem; display: none; }
+        .speech { 
+            background: white; color: black; padding: 8px; border-radius: 15px; 
+            margin-bottom: 5px; font-weight: bold; font-size: 0.8rem; 
+            display: none; border: 2px solid var(--dora); 
+        }
         .dora-img { width: 110px; animation: float 3s infinite ease-in-out; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
+        /* Game Elements */
         .balloon { position: absolute; width: 60px; height: 80px; border-radius: 50%; cursor: pointer; z-index: 50; }
-        #score { position: fixed; top: 20px; left: 20px; z-index: 150; color: var(--gold); font-size: 1.5rem; display: none; }
+        #score { 
+            position: fixed; top: 20px; left: 20px; z-index: 150; 
+            color: var(--gold); font-size: 1.5rem; display: none; 
+            background: rgba(0,0,0,0.5); padding: 10px 20px; border-radius: 20px;
+        }
+        
+        .next-btn { 
+            background: none; border: 1px solid var(--dora); color: var(--dora); 
+            padding: 5px 10px; border-radius: 10px; cursor: pointer; 
+            font-size: 0.7rem; margin-bottom: 10px; 
+        }
     </style>
 </head>
 <body>
@@ -41,10 +80,11 @@
 </div>
 
 <div id="login">
-    <h2 style="color: var(--gold);"> New Year Celebration By salil</h2>
+    <h2 style="color: var(--gold); margin-top:0;">New Year Celebration By Salil</h2>
     <input type="text" id="name" placeholder="Name">
     <input type="text" id="fav" placeholder="Favorite Thing">
-    <button onclick="go()">START Time Machine  🚀</button>
+    <div id="err">❌ Doraemon says: Only the REAL Salil can use that name!</div>
+    <button onclick="go()">START Time Machine 🚀</button>
 </div>
 
 <div id="ui-center">
@@ -52,6 +92,7 @@
         <h1 id="t1" style="margin:0;"></h1>
         <p id="t2" style="color: #ccc;"></p>
         <div id="video-box">
+            <button class="next-btn" onclick="nextSong()">Next Song 🎵</button>
             <iframe id="player" width="100%" height="220" 
             src="https://www.youtube.com/embed/aG2PQ8x9F4g?enablejsapi=1&rel=0" 
             frameborder="0" allow="autoplay; encrypted-media"></iframe>
@@ -63,11 +104,29 @@
 <script>
     const canvas = document.getElementById('c'), ctx = canvas.getContext('2d');
     let parts = [], score = 0;
+    
+    // Song IDs: Haan Main Galat, Twist, Love Aaj Kal Theme
+    const playlist = ["aG2PQ8x9F4g", "hicN8rVmNXo", "v_yTsvZ8m08"];
+    let songIdx = 0;
+
     function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
     window.onresize = resize; resize();
 
+    function nextSong() {
+        songIdx = (songIdx + 1) % playlist.length;
+        document.getElementById('player').src = `https://www.youtube.com/embed/${playlist[songIdx]}?autoplay=1&rel=0`;
+    }
+
     function go() {
-        // MUSIC TRIGGER: This satisfies the browser's "click to play" rule
+        const inputName = document.getElementById('name').value.trim();
+        
+        // Block name Salil
+        if (inputName.toLowerCase() === "salil") {
+            document.getElementById('err').style.display = "block";
+            return;
+        }
+
+        // Trigger autoplay inside the click event to satisfy browser security
         const p = document.getElementById('player');
         p.src += "&autoplay=1";
 
@@ -75,7 +134,7 @@
         document.getElementById('ui-center').style.display = 'block';
         document.getElementById('score').style.display = 'block';
         document.getElementById('sp').style.display = 'block';
-        document.getElementById('t1').innerText = "Happy 2026, " + document.getElementById('name').value + "!";
+        document.getElementById('t1').innerText = "Happy 2026, " + inputName + "!";
         document.getElementById('t2').innerText = "Wishing you endless " + document.getElementById('fav').value + "!";
         
         animate();
@@ -84,7 +143,14 @@
     }
 
     function explode(x, y, col) {
-        for(let i=0; i<40; i++) parts.push({x:x, y:y, c:col || `hsl(${Math.random()*360},100%,60%)`, v:{x:(Math.random()-0.5)*12, y:(Math.random()-0.5)*12}, a:1});
+        for(let i=0; i<40; i++) {
+            parts.push({
+                x: x, y: y, 
+                c: col || `hsl(${Math.random()*360},100%,60%)`, 
+                v: { x: (Math.random()-0.5)*12, y: (Math.random()-0.5)*12 }, 
+                a: 1
+            });
+        }
     }
 
     function spawn() {
@@ -93,27 +159,37 @@
         let pos = -100;
         const m = setInterval(() => {
             pos += 3; b.style.bottom = pos+'px';
-            if(pos > window.innerHeight) { clearInterval(m); b.remove(); }
+            if(pos > window.innerHeight + 100) { clearInterval(m); b.remove(); }
         }, 20);
         b.onclick = () => {
             score++; document.getElementById('s').innerText = score;
-            explode(b.offsetLeft+30, window.innerHeight-b.offsetTop-40, col);
+            const rect = b.getBoundingClientRect();
+            explode(rect.left+30, rect.top+40, col);
             clearInterval(m); b.remove();
+            
+            // Doraemon Response
+            const doraMsg = document.getElementById('sp');
+            doraMsg.innerText = "BOOM! Awesome!";
+            setTimeout(() => { doraMsg.innerText = "Let's Dance!"; }, 1000);
         };
         document.body.appendChild(b);
     }
 
     function animate() {
-        ctx.fillStyle = 'rgba(2,1,17,0.2)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.fillStyle = 'rgba(2,1,17,0.25)'; ctx.fillRect(0,0,canvas.width,canvas.height);
         parts.forEach((p,i) => {
             p.x+=p.v.x; p.y+=p.v.y; p.v.y+=0.15; p.a-=0.02;
             if(p.a<=0) parts.splice(i,1);
-            else { ctx.globalAlpha=p.a; ctx.fillStyle=p.c; ctx.beginPath(); ctx.arc(p.x,p.y,3,0,Math.PI*2); ctx.fill(); }
+            else { 
+                ctx.globalAlpha=p.a; 
+                ctx.fillStyle=p.c; 
+                ctx.beginPath(); 
+                ctx.arc(p.x,p.y,3,0,Math.PI*2); 
+                ctx.fill(); 
+            }
         });
         requestAnimationFrame(animate);
     }
 </script>
 </body>
 </html>
-
-
