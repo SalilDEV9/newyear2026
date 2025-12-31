@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy New Year 2026 - From Salil</title>
+    <title>Happy New Year 2026 - Salil's Special</title>
     <style>
         :root {
-            --primary-gold: #ffd700;
-            --accent-pink: #ff007f;
+            --gold: #ffd700;
+            --glass: rgba(255, 255, 255, 0.1);
         }
 
         body, html {
@@ -15,8 +15,17 @@
             width: 100%; height: 100%;
             overflow: hidden;
             font-family: 'Segoe UI', sans-serif;
-            background: #050510;
+            /* Animated Festive Background */
+            background: linear-gradient(45deg, #050510, #1a1a3a, #050510);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             color: white;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         canvas { position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none; }
@@ -26,83 +35,79 @@
             position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             z-index: 10;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(25px);
+            background: var(--glass);
+            backdrop-filter: blur(20px);
             padding: 3rem;
             border-radius: 30px;
             text-align: center;
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            box-shadow: 0 0 40px rgba(0,0,0,0.8);
         }
 
         input {
-            display: block; width: 260px; margin: 1.5rem auto;
+            display: block; width: 280px; margin: 1.5rem auto;
             padding: 15px; border-radius: 12px; border: none;
-            background: rgba(255, 255, 255, 0.9); font-size: 1rem; color: #000;
+            background: white; font-size: 1rem; color: #333;
+            outline: none;
         }
 
         button {
-            padding: 15px 45px; background: linear-gradient(45deg, #ffd700, #ffa500);
+            padding: 15px 50px; 
+            background: linear-gradient(45deg, #ffd700, #ff8c00);
             border: none; border-radius: 30px; font-weight: bold;
-            cursor: pointer; font-size: 1.2rem; color: #222;
+            cursor: pointer; font-size: 1.2rem; color: #000;
+            box-shadow: 0 10px 20px rgba(255, 140, 0, 0.3);
             transition: 0.3s;
         }
 
-        button:hover { transform: scale(1.05); box-shadow: 0 0 20px var(--primary-gold); }
+        button:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(255, 215, 0, 0.5); }
 
-        /* Greeting & Signature */
+        /* Greeting Section */
         #greeting-display {
             position: absolute; width: 100%; top: 25%;
             text-align: center; z-index: 5;
-            display: none;
+            display: none; pointer-events: none;
+        }
+
+        #main-wish { 
+            font-size: 4.5rem; 
+            background: linear-gradient(to bottom, #fff, var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
         }
 
         .salil-signature {
             font-family: 'Brush Script MT', cursive;
-            font-size: 3rem; color: var(--primary-gold);
-            margin-top: 30px; opacity: 0;
-            animation: fadeIn 2s forwards 1.5s;
+            font-size: 3.5rem; color: var(--gold);
+            margin-top: 20px; text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
         }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* Now Playing Widget */
+        /* Song Widget */
         #music-widget {
-            position: fixed; bottom: 20px; left: 20px;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
-            padding: 12px 25px;
-            border-radius: 50px;
-            display: none;
-            align-items: center;
-            gap: 15px;
-            border: 1px solid rgba(255,255,255,0.2);
-            z-index: 100;
+            position: fixed; bottom: 30px; left: 30px;
+            background: rgba(0,0,0,0.7);
+            padding: 15px 25px; border-radius: 50px;
+            display: none; align-items: center; gap: 15px;
+            border: 1px solid var(--gold); z-index: 100;
         }
 
-        .music-bars { display: flex; align-items: flex-end; gap: 3px; height: 20px; }
-        .bar { width: 3px; background: var(--primary-gold); animation: dance 1s infinite; }
-        .bar:nth-child(2) { animation-delay: 0.2s; }
-        .bar:nth-child(3) { animation-delay: 0.4s; }
+        .bar { width: 4px; height: 15px; background: var(--gold); display: inline-block; animation: wave 1s infinite; }
+        @keyframes wave { 0%, 100% { height: 5px; } 50% { height: 25px; } }
 
-        @keyframes dance { 
-            0%, 100% { height: 5px; } 
-            50% { height: 20px; } 
-        }
-
-        /* Game Elements */
+        /* Pop Score */
         #score-board {
-            position: fixed; top: 20px; right: 20px;
-            font-size: 1.2rem; color: var(--primary-gold);
+            position: fixed; top: 25px; right: 25px;
+            font-size: 1.4rem; color: var(--gold);
             z-index: 100; display: none;
-            background: rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 20px;
+            background: var(--glass); padding: 10px 25px; border-radius: 30px;
         }
 
         .balloon {
-            position: absolute; width: 65px; height: 85px;
+            position: absolute; width: 70px; height: 95px;
             border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
             cursor: pointer; z-index: 3;
-            box-shadow: inset -8px -8px 15px rgba(0,0,0,0.2);
+            box-shadow: inset -10px -10px 20px rgba(0,0,0,0.3);
         }
     </style>
 </head>
@@ -110,8 +115,8 @@
 
     <canvas id="fireworksCanvas"></canvas>
 
-    <audio id="bgm" loop>
-        <source src="https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Ketsa/Raising_Frequency/Ketsa_-_04_-_Raising_Frequency.mp3" type="audio/mpeg">
+    <audio id="bgm" loop preload="auto">
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
     </audio>
 
     <audio id="popSound">
@@ -119,31 +124,28 @@
     </audio>
 
     <div id="music-widget">
-        <div class="music-bars">
-            <div class="bar"></div><div class="bar"></div><div class="bar"></div>
-        </div>
+        <div class="bar"></div><div class="bar" style="animation-delay: 0.2s"></div><div class="bar" style="animation-delay: 0.4s"></div>
         <div>
-            <div style="font-size: 0.65rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px;">Now Playing</div>
-            <div id="song-name" style="font-size: 0.95rem; font-weight: bold;">Haan Main Galat</div>
-            <div style="font-size: 0.75rem; color: var(--primary-gold);">Pritam, Arijit Singh</div>
+            <div style="font-size: 0.7rem; color: #ccc;">NOW PLAYING</div>
+            <div style="font-weight: bold; font-size: 1rem;">Haan Main Galat - Remix</div>
         </div>
     </div>
 
     <div id="setup-screen">
-        <h1 style="color: var(--primary-gold); margin: 0;">Happy New Year 2026</h1>
-        <p style="opacity: 0.8; font-size: 0.9rem;">Turn sound on for the best experience!</p>
+        <h1 style="color: var(--gold); margin: 0;">Happy 2026</h1>
+        <p>A gift from Salil is waiting...</p>
         <input type="text" id="userName" placeholder="Your Name">
-        <input type="text" id="userFavorite" placeholder="Your Favorite Thing">
-        <button onclick="startCelebration()">Start Celebration</button>
+        <input type="text" id="userFavorite" placeholder="Your Best Memory">
+        <button onclick="startCelebration()">Enter the Party</button>
     </div>
 
     <div id="greeting-display">
-        <h1 id="main-wish" style="font-size: 4rem; margin-bottom: 0; text-shadow: 0 0 20px rgba(255,255,255,0.3);"></h1>
-        <h3 id="fav-wish" style="font-weight: 300; margin-top: 10px; color: #ddd;"></h3>
+        <h1 id="main-wish"></h1>
+        <h3 id="fav-wish" style="font-weight: 300; letter-spacing: 2px;"></h3>
         <div class="salil-signature">— Wishes from Salil</div>
     </div>
 
-    <div id="score-board">Pops: <span id="score">0</span></div>
+    <div id="score-board">Balloons Popped: <span id="score">0</span></div>
 
     <script>
         const canvas = document.getElementById('fireworksCanvas');
@@ -177,15 +179,18 @@
 
         function createExplosion(x, y) {
             for (let i = 0; i < 40; i++) {
-                particles.push(new Particle(x, y, `hsl(${Math.random() * 360}, 100%, 65%)`));
+                particles.push(new Particle(x, y, `hsl(${Math.random() * 360}, 100%, 70%)`));
             }
         }
 
         function startCelebration() {
-            document.getElementById('bgm').play();
+            // Fix Sound: play() is called directly from user interaction
+            const music = document.getElementById('bgm');
+            music.volume = 0.5;
+            music.play().catch(() => alert("Please allow sound in your browser settings!"));
             
             const name = document.getElementById('userName').value || "Friend";
-            const fav = document.getElementById('userFavorite').value || "Success";
+            const fav = document.getElementById('userFavorite').value || "Joy";
             
             document.getElementById('setup-screen').style.display = 'none';
             document.getElementById('greeting-display').style.display = 'block';
@@ -193,42 +198,42 @@
             document.getElementById('music-widget').style.display = 'flex';
             
             document.getElementById('main-wish').innerText = `Happy New Year, ${name}!`;
-            document.getElementById('fav-wish').innerText = `May 2026 bring you endless ${fav}!`;
+            document.getElementById('fav-wish').innerText = `May 2026 bring you more ${fav}!`;
 
             spawnBalloons();
             animate();
             
             // Auto-fireworks
             setInterval(() => {
-                createExplosion(Math.random() * canvas.width, Math.random() * canvas.height * 0.4);
-            }, 2500);
+                createExplosion(Math.random() * canvas.width, Math.random() * canvas.height * 0.5);
+            }, 3000);
         }
 
         function spawnBalloons() {
             setInterval(() => {
                 const b = document.createElement('div');
                 b.className = 'balloon';
-                b.style.background = `hsla(${Math.random() * 360}, 75%, 60%, 0.85)`;
+                b.style.background = `hsla(${Math.random() * 360}, 80%, 60%, 0.9)`;
                 b.style.left = Math.random() * 90 + 'vw';
-                b.style.bottom = '-100px';
+                b.style.bottom = '-120px';
                 
-                let pos = -100;
-                let speed = 2.5 + Math.random() * 2;
+                let pos = -120;
+                let speed = 2 + Math.random() * 2.5;
 
                 const move = setInterval(() => {
                     pos += speed;
                     b.style.bottom = pos + 'px';
-                    b.style.transform = `translateX(${Math.sin(pos/40) * 15}px)`;
-                    if (pos > window.innerHeight + 100) { clearInterval(move); b.remove(); }
+                    b.style.transform = `rotate(${Math.sin(pos/50) * 15}deg)`;
+                    if (pos > window.innerHeight + 120) { clearInterval(move); b.remove(); }
                 }, 20);
 
                 b.onclick = () => {
-                    document.getElementById('popSound').currentTime = 0;
-                    document.getElementById('popSound').play();
+                    const pop = document.getElementById('popSound');
+                    pop.currentTime = 0; pop.play();
                     score++;
                     document.getElementById('score').innerText = score;
                     const rect = b.getBoundingClientRect();
-                    createExplosion(rect.left + 32, rect.top + 42);
+                    createExplosion(rect.left + 35, rect.top + 45);
                     clearInterval(move); b.remove();
                 };
                 document.body.appendChild(b);
@@ -236,7 +241,7 @@
         }
 
         function animate() {
-            ctx.fillStyle = 'rgba(5, 5, 16, 0.25)';
+            ctx.fillStyle = 'rgba(5, 5, 16, 0.2)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             particles.forEach((p, i) => {
                 if (p.alpha <= 0) particles.splice(i, 1);
