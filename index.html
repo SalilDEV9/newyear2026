@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>New Year 2026 - Magic Experience</title>
+<title>Happy New Year 2026 - Salil</title>
 <style>
 :root {
   --primary:#ffd700;
@@ -18,6 +18,7 @@ body{
   overflow:hidden;
   color:white;
   text-align:center;
+  cursor:crosshair;
 }
 .screen{
   position:absolute;
@@ -46,7 +47,6 @@ input{
   margin:10px;
   width:250px;
   text-align:center;
-  cursor:text;
 }
 button{
   background:var(--primary);
@@ -126,10 +126,9 @@ button:hover{transform:scale(1.05);}
 </head>
 <body>
 
-<!-- SCREEN 1: Ask Name & Favorite Thing -->
+<!-- SCREEN 1: Ask favorite thing -->
 <div class="screen active" id="s1">
   <h1>✨ Welcome 2026 ✨</h1>
-  <input type="text" id="name" placeholder="Enter your name"/>
   <input type="text" id="fav" placeholder="Your favorite thing"/>
   <button onclick="startJourney()">🎉 Begin</button>
 </div>
@@ -148,7 +147,7 @@ button:hover{transform:scale(1.05);}
 </audio>
 
 <script>
-// Background stars
+// Floating stars
 const stars=[];
 for(let i=0;i<100;i++){
   const s=document.createElement("div");
@@ -168,7 +167,7 @@ function animateStars(){
 }
 animateStars();
 
-// Fireworks on mouse move
+// Fireworks follow mouse
 document.body.addEventListener("mousemove",firework);
 function firework(e){
   const f=document.createElement("div");
@@ -186,10 +185,11 @@ function toggleMusic(e){
   m.paused?m.play():m.pause();
 }
 
-// Journey start
+// Start Journey
 function startJourney(){
-  const name=document.getElementById("name").value.trim() || "Friend";
+  const name = "Salil"; // always Salil
   const fav=document.getElementById("fav").value.trim() || "joy";
+
   document.getElementById("s1").classList.remove("active");
   const s2=document.getElementById("s2");
   s2.classList.add("active");
@@ -197,7 +197,7 @@ function startJourney(){
   // Animated text reveal
   const greetEl=document.getElementById("greet");
   const wishEl=document.getElementById("wish");
-  const greetText=`Happy New Year, ${name}! 🎆 from Salil`;
+  const greetText=`Happy New Year, ${name}! 🎆 , Salil`;
   const wishText=`May 2026 bring endless fun and happiness in your favorite thing: <b>${fav}</b>! 🎉`;
 
   function animateText(el,text){
@@ -231,6 +231,5 @@ function startJourney(){
   }
 }
 </script>
-
 </body>
 </html>
