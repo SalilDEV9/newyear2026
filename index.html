@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Happy New Year 2026 - Salil</title>
+<title>New Year 2026 - Magic Experience</title>
 <style>
 :root {
   --primary:#ffd700;
@@ -38,6 +38,7 @@ body{
 h1{
   font-size:50px;
   text-shadow:0 0 15px var(--primary);
+  margin-bottom:20px;
 }
 input{
   padding:12px;
@@ -72,6 +73,14 @@ button:hover{transform:scale(1.05);}
   cursor:pointer;
   font-size:20px;
 }
+.star{
+  position:absolute;
+  width:2px;
+  height:2px;
+  background:white;
+  border-radius:50%;
+  opacity:0.8;
+}
 .firework{
   position:absolute;
   width:6px;
@@ -82,14 +91,6 @@ button:hover{transform:scale(1.05);}
 }
 @keyframes explode{
   to{transform:scale(10);opacity:0;}
-}
-.star{
-  position:absolute;
-  width:2px;
-  height:2px;
-  background:white;
-  border-radius:50%;
-  opacity:0.8;
 }
 #themeImg{
   width:200px;
@@ -126,17 +127,18 @@ button:hover{transform:scale(1.05);}
 </head>
 <body>
 
-<!-- SCREEN 1: Ask favorite thing -->
+<!-- SCREEN 1: Input -->
 <div class="screen active" id="s1">
   <h1>✨ Welcome 2026 ✨</h1>
+  <input type="text" id="name" placeholder="Enter your name"/>
   <input type="text" id="fav" placeholder="Your favorite thing"/>
   <button onclick="startJourney()">🎉 Begin</button>
 </div>
 
-<!-- SCREEN 2: Final Greeting & Mini Game -->
+<!-- SCREEN 2: Greeting & Mini-game -->
 <div class="screen" id="s2">
   <h1 id="greet"></h1>
-  <p id="wish" style="font-size:22px; max-width:600px; margin:auto; line-height:1.5;"></p>
+  <p id="wish"></p>
   <img id="themeImg" src="" alt="Theme Image"/>
   <div id="miniGame"></div>
 </div>
@@ -154,7 +156,7 @@ for(let i=0;i<100;i++){
   s.className="star";
   s.style.left=Math.random()*window.innerWidth+"px";
   s.style.top=Math.random()*window.innerHeight+"px";
-  stars.push({el:s,x:parseFloat(s.style.left),y:parseFloat(s.style.top),speed:Math.random()*0.5+0.1});
+  stars.push({el:s,y:parseFloat(s.style.top),speed:Math.random()*0.5+0.1});
   document.body.appendChild(s);
 }
 function animateStars(){
@@ -185,42 +187,23 @@ function toggleMusic(e){
   m.paused?m.play():m.pause();
 }
 
-// Start Journey
-function startJourney(){
-  const name = "Salil"; // always Salil
-  const fav=document.getElementById("fav").value.trim() || "joy";
-
-  document.getElementById("s1").classList.remove("active");
-  const s2=document.getElementById("s2");
-  s2.classList.add("active");
-
-  // Animated text reveal
-  const greetEl=document.getElementById("greet");
-  const wishEl=document.getElementById("wish");
-  const greetText=`Happy New Year, ${name}! 🎆 , Salil`;
-  const wishText=`May 2026 bring endless fun and happiness in your favorite thing: <b>${fav}</b>! 🎉`;
-
-  function animateText(el,text){
-    el.innerHTML="";
-    for(let i=0;i<text.length;i++){
-      const span=document.createElement("span");
-      span.className="reveal";
-      span.innerHTML=text[i];
-      el.appendChild(span);
-      setTimeout(()=>{span.style.opacity=1;},i*50);
-    }
+// Animate text reveal
+function animateText(el,text,duration=50){
+  el.innerHTML="";
+  for(let i=0;i<text.length;i++){
+    const span=document.createElement("span");
+    span.className="reveal";
+    span.innerHTML=text[i];
+    el.appendChild(span);
+    setTimeout(()=>{span.style.opacity=1;},i*duration);
   }
-  animateText(greetEl,greetText);
-  animateText(wishEl,wishText);
+}
 
-  // Theme image
-  const img=document.getElementById("themeImg");
-  img.src="https://cdn.pixabay.com/photo/2017/01/20/00/30/fireworks-1994879_1280.jpg";
-
-  // Mini-game: Click balloons
+// Mini-game balloons
+function createMiniGame(){
   const game=document.getElementById("miniGame");
   game.innerHTML="";
-  for(let i=0;i<5;i++){
+  for(let i=0;i<8;i++){
     const b=document.createElement("div");
     b.className="balloon";
     b.style.background=`hsl(${Math.random()*360},80%,60%)`;
@@ -229,6 +212,44 @@ function startJourney(){
     b.onclick=function(){this.remove();}
     game.appendChild(b);
   }
+}
+
+// Start journey
+function startJourney(){
+  const name=document.getElementById("name").value.trim() || "Friend";
+  const fav=document.getElementById("fav").value.trim() || "joy";
+
+  document.getElementById("s1").classList.remove("active");
+  document.getElementById("s2").classList.add("active");
+
+  animateText(document.getElementById("greet"),`Happy New Year, ${name}! 🎆 From Salil`);
+  animateText(document.getElementById("wish"),`May 2026 bring endless fun and happiness in your favorite thing: ${fav}! 🎉`);
+
+  document.getElementById("themeImg").src="https://cdn.pixabay.com/photo/2017/01/20/00/30/fireworks-1994879_1280.jpg";
+
+  createMiniGame();
+
+  // Confetti every 3 seconds
+  setInterval(()=>{
+    for(let i=0;i<30;i++){
+      const c=document.createElement("div");
+      c.style.width="6px";
+      c.style.height="6px";
+      c.style.background=`hsl(${Math.random()*360},100%,60%)`;
+      c.style.position="absolute";
+      c.style.left=Math.random()*window.innerWidth+"px";
+      c.style.top="0px";
+      c.style.opacity=0.9;
+      c.style.borderRadius="50%";
+      document.body.appendChild(c);
+      let top=0;
+      const fall=setInterval(()=>{
+        top+=5;
+        c.style.top=top+"px";
+        if(top>window.innerHeight){c.remove();clearInterval(fall);}
+      },20);
+    }
+  },3000);
 }
 </script>
 </body>
