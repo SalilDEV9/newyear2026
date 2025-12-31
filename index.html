@@ -1,9 +1,7 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Happy 2026 from Salil</title>
     <style>
         :root { --gold: #ffd700; --dora-blue: #0096d7; --red: #ff3131; }
@@ -25,7 +23,7 @@
         }
 
         .glass-panel {
-            background: rgba(0, 0, 0, 0.75);
+            background: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(20px);
             padding: 30px; border-radius: 40px;
             border: 2px solid var(--gold);
@@ -34,9 +32,9 @@
 
         /* Centered Song Player */
         #music-frame {
-            margin: 25px 0; border-radius: 20px; overflow: hidden;
+            margin: 20px 0; border-radius: 20px; overflow: hidden;
             border: 4px solid var(--dora-blue);
-            box-shadow: 0 0 20px var(--dora-blue);
+            background: #000;
         }
 
         /* Floating Doraemon */
@@ -54,12 +52,12 @@
 
         @keyframes float { 0%, 100% { transform: translateY(0) rotate(2deg); } 50% { transform: translateY(-20px) rotate(-2deg); } }
 
-        /* Setup / Login Box */
+        /* Setup Screen */
         #setup-box {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            z-index: 200; background: rgba(0, 0, 0, 0.9);
+            z-index: 200; background: rgba(0, 0, 0, 0.95);
             padding: 40px; border-radius: 30px; border: 2px solid var(--gold);
-            text-align: center; width: 320px; box-shadow: 0 0 100px #000;
+            text-align: center; width: 320px;
         }
 
         input { 
@@ -70,11 +68,9 @@
         button { 
             padding: 15px 40px; border-radius: 50px; border: none; 
             background: var(--red); color: white; cursor: pointer; 
-            font-weight: bold; font-size: 1.1rem; transition: 0.3s;
+            font-weight: bold; font-size: 1.1rem;
         }
-        button:hover { transform: scale(1.1); box-shadow: 0 0 20px var(--red); }
 
-        /* HUD elements */
         #score-pill {
             position: fixed; top: 20px; left: 20px; z-index: 150;
             background: rgba(0,0,0,0.7); padding: 12px 25px; border-radius: 40px;
@@ -82,20 +78,25 @@
         }
 
         .balloon {
-            position: absolute; width: 65px; height: 85px; border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            position: absolute; width: 65px; height: 85px; border-radius: 50%;
             cursor: pointer; z-index: 50; box-shadow: inset -8px -8px 20px rgba(0,0,0,0.3);
         }
 
         .signature {
             font-family: 'Brush Script MT', cursive; font-size: 3rem; color: var(--gold);
-            margin-top: 15px; text-shadow: 0 0 15px rgba(255,215,0,0.5);
+            margin-top: 15px;
+        }
+
+        .change-btn {
+            background: none; border: 1px solid var(--dora-blue); color: var(--dora-blue);
+            font-size: 0.7rem; padding: 5px 10px; border-radius: 10px; cursor: pointer;
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
 
 <canvas id="canvas"></canvas>
-
 <div id="score-pill">🫧 Pops: <span id="score">0</span></div>
 
 <div class="dora-container">
@@ -104,20 +105,20 @@
 </div>
 
 <div id="setup-box">
-    <h2 style="color: var(--gold); margin-top:0; font-size: 2rem;">Salil's Party</h2>
-    <p style="font-size: 0.9rem; opacity: 0.8;">Enter the Anywhere Door to 2026</p>
-    <input type="text" id="nameIn" placeholder="Enter Your Name">
+    <h2 style="color: var(--gold); margin-top:0;">Salil's Party</h2>
+    <input type="text" id="nameIn" placeholder="Your Name">
     <input type="text" id="favIn" placeholder="Your Favorite Hobby">
-    <button onclick="startParty()">ENTER PARTY 🚀</button>
+    <button onclick="startParty()">START PARTY 🚀</button>
 </div>
 
 <div id="content-wrapper">
     <div class="glass-panel">
-        <h1 id="mTitle" style="font-size: 2.8rem; margin:0; color: white;"></h1>
-        <p id="sTitle" style="color: #ddd; font-size: 1.2rem; margin: 10px 0;"></p>
+        <h1 id="mTitle" style="font-size: 2.5rem; margin:0;"></h1>
+        <p id="sTitle" style="color: #ddd; margin: 10px 0;"></p>
         
         <div id="music-frame">
-            <iframe id="yt-player" width="100%" height="250" 
+            <button class="change-btn" onclick="changeSong()">Change Song 🎵</button>
+            <iframe id="yt-player" width="100%" height="200" 
                 src="https://www.youtube.com/embed/aG2PQ8x9F4g?enablejsapi=1&rel=0" 
                 frameborder="0" allow="autoplay; encrypted-media">
             </iframe>
@@ -132,6 +133,8 @@
     const ctx = canvas.getContext('2d');
     let particles = [];
     let score = 0;
+    const songs = ["aG2PQ8x9F4g", "hicN8rVmNXo", "m_9S_B_j6mY"]; // Love Aaj Kal playlist
+    let currentSongIdx = 0;
 
     function resize() {
         canvas.width = window.innerWidth;
@@ -140,45 +143,39 @@
     window.onresize = resize;
     resize();
 
+    function changeSong() {
+        currentSongIdx = (currentSongIdx + 1) % songs.length;
+        document.getElementById('yt-player').src = `https://www.youtube.com/embed/${songs[currentSongIdx]}?autoplay=1&rel=0`;
+    }
+
     function startParty() {
         const uName = document.getElementById('nameIn').value || "Friend";
         const uFav = document.getElementById('favIn').value || "Fun";
 
-        // UI Transitions
+        // Satisfies browser "click-to-play" for music
+        const player = document.getElementById('yt-player');
+        player.src += "&autoplay=1";
+
         document.getElementById('setup-box').style.display = 'none';
         document.getElementById('content-wrapper').style.display = 'block';
         document.getElementById('score-pill').style.display = 'block';
         document.getElementById('dora-msg').style.display = 'block';
 
-        // Set Personalized Text
         document.getElementById('mTitle').innerText = "Happy New Year, " + uName + "!";
-        document.getElementById('sTitle').innerText = "Salil wishes you more " + uFav + " in 2026!";
+        document.getElementById('sTitle').innerText = "Let's rock " + uFav + " in 2026!";
 
-        // Start Systems
         animate();
-        setInterval(spawnBalloon, 900);
-        
-        // Background Fireworks Auto-Launch
-        setInterval(() => {
-            burstEffect(Math.random()*canvas.width, Math.random()*canvas.height*0.5);
-        }, 2000);
+        setInterval(spawnBalloon, 1000);
+        setInterval(() => burst(Math.random()*canvas.width, Math.random()*canvas.height*0.4), 2500);
     }
 
     class Particle {
         constructor(x, y, color) {
             this.x = x; this.y = y; this.color = color;
-            this.v = { x: (Math.random()-0.5)*14, y: (Math.random()-0.5)*14 };
+            this.v = { x: (Math.random()-0.5)*12, y: (Math.random()-0.5)*12 };
             this.a = 1;
-            this.friction = 0.98;
         }
-        update() { 
-            this.v.x *= this.friction;
-            this.v.y *= this.friction;
-            this.x += this.v.x; 
-            this.y += this.v.y; 
-            this.v.y += 0.12; // Gravity
-            this.a -= 0.015; 
-        }
+        update() { this.x += this.v.x; this.y += this.v.y; this.v.y += 0.15; this.a -= 0.02; }
         draw() {
             ctx.globalAlpha = this.a;
             ctx.fillStyle = this.color;
@@ -186,10 +183,8 @@
         }
     }
 
-    function burstEffect(x, y, color) {
-        for(let i=0; i<40; i++) {
-            particles.push(new Particle(x, y, color || `hsl(${Math.random()*360}, 100%, 65%)`));
-        }
+    function burst(x, y, color) {
+        for(let i=0; i<35; i++) particles.push(new Particle(x, y, color || `hsl(${Math.random()*360},100%,65%)`));
     }
 
     function spawnBalloon() {
@@ -198,40 +193,31 @@
         b.className = 'balloon';
         b.style.background = color;
         b.style.left = Math.random() * 85 + 'vw';
-        b.style.bottom = '-120px';
+        b.style.bottom = '-100px';
         
-        let pos = -120;
-        let speed = 2.5 + Math.random() * 3;
+        let pos = -100;
         const move = setInterval(() => {
-            pos += speed;
+            pos += 3;
             b.style.bottom = pos + 'px';
-            b.style.transform = `translateX(${Math.sin(pos/40)*15}px)`;
-            if(pos > window.innerHeight + 120) { clearInterval(move); b.remove(); }
+            if(pos > window.innerHeight + 100) { clearInterval(move); b.remove(); }
         }, 20);
 
         b.onclick = () => {
             score++;
             document.getElementById('score').innerText = score;
             const rect = b.getBoundingClientRect();
-            
-            // Burst Animation with same color
-            burstEffect(rect.left + 32, rect.top + 42, color);
+            burst(rect.left + 30, rect.top + 40, color);
             b.remove();
             clearInterval(move);
-            
-            // Doraemon Response
-            const doraMsg = document.getElementById('dora-msg');
-            doraMsg.innerText = "Boom! Amazing!";
-            setTimeout(() => { doraMsg.innerText = "Happy 2026!"; }, 1500);
+            document.getElementById('dora-msg').innerText = "BOOM! Awesome!";
+            setTimeout(() => { document.getElementById('dora-msg').innerText = "Happy 2026!"; }, 1500);
         };
         document.body.appendChild(b);
     }
 
     function animate() {
-        // Trailing fade effect
         ctx.fillStyle = 'rgba(2, 1, 17, 0.25)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
         particles.forEach((p, i) => {
             if(p.a <= 0) particles.splice(i, 1);
             else { p.update(); p.draw(); }
