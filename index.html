@@ -1,256 +1,317 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>New Year 2026 - Magic Experience</title>
-<style>
-:root {
-  --primary:#ffd700;
-  --bg1:#0f0c29;
-  --bg2:#302b63;
-  --bg3:#24243e;
-}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{
-  height:100vh;
-  background:linear-gradient(120deg,var(--bg1),var(--bg2),var(--bg3));
-  font-family:'Georgia',serif;
-  overflow:hidden;
-  color:white;
-  text-align:center;
-  cursor:crosshair;
-}
-.screen{
-  position:absolute;
-  inset:0;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  opacity:0;
-  transform:scale(0.95);
-  transition:1s ease;
-}
-.screen.active{
-  opacity:1;
-  transform:scale(1);
-}
-h1{
-  font-size:50px;
-  text-shadow:0 0 15px var(--primary);
-  margin-bottom:20px;
-}
-input{
-  padding:12px;
-  font-size:18px;
-  border-radius:10px;
-  border:2px solid var(--primary);
-  margin:10px;
-  width:250px;
-  text-align:center;
-}
-button{
-  background:var(--primary);
-  border:none;
-  color:#000;
-  font-size:18px;
-  padding:12px 25px;
-  border-radius:25px;
-  cursor:pointer;
-  margin-top:15px;
-  transition:.3s;
-}
-button:hover{transform:scale(1.05);}
-#musicBtn{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  width:50px;
-  height:50px;
-  border-radius:50%;
-  background:var(--primary);
-  border:none;
-  cursor:pointer;
-  font-size:20px;
-}
-.star{
-  position:absolute;
-  width:2px;
-  height:2px;
-  background:white;
-  border-radius:50%;
-  opacity:0.8;
-}
-.firework{
-  position:absolute;
-  width:6px;
-  height:6px;
-  border-radius:50%;
-  background:var(--primary);
-  animation:explode 1s linear forwards;
-}
-@keyframes explode{
-  to{transform:scale(10);opacity:0;}
-}
-#themeImg{
-  width:200px;
-  margin-top:20px;
-  border-radius:15px;
-  box-shadow:0 0 20px var(--primary);
-  animation:float 3s ease-in-out infinite alternate;
-}
-@keyframes float{
-  from{transform:translateY(0);}
-  to{transform:translateY(-20px);}
-}
-#miniGame{
-  margin-top:20px;
-  width:300px;
-  height:200px;
-  border:2px solid var(--primary);
-  border-radius:15px;
-  position:relative;
-  overflow:hidden;
-}
-.balloon{
-  position:absolute;
-  width:30px;
-  height:40px;
-  border-radius:50%;
-  cursor:pointer;
-}
-.reveal{
-  display:inline-block;
-  opacity:0;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy New Year 2026</title>
+    <style>
+        :root {
+            --primary-gold: #ffd700;
+            --deep-blue: #0a0a23;
+            --accent-pink: #ff007f;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: radial-gradient(circle at center, #1a1a3a 0%, #050510 100%);
+            color: white;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Input Form Container */
+        #setup-screen {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            transition: opacity 0.8s ease;
+        }
+
+        input {
+            display: block;
+            width: 80%;
+            margin: 1rem auto;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+        }
+
+        button {
+            padding: 12px 30px;
+            background: var(--primary-gold);
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            background: #fff;
+        }
+
+        /* Main Display Area */
+        #greeting-display {
+            position: absolute;
+            width: 100%;
+            top: 40%;
+            text-align: center;
+            z-index: 5;
+            display: none;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+        }
+
+        .reveal-text {
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(to right, #fff, var(--primary-gold), #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            margin-bottom: 10px;
+        }
+
+        .sub-text {
+            font-size: 1.5rem;
+            color: #ddd;
+        }
+
+        /* Mini Game Styles */
+        #game-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: auto;
+            display: none;
+        }
+
+        .balloon {
+            position: absolute;
+            width: 50px;
+            height: 70px;
+            background: radial-gradient(circle at 30% 30%, var(--accent-pink), #800040);
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            cursor: pointer;
+            animation: float-up 5s linear infinite;
+        }
+
+        @keyframes float-up {
+            from { transform: translateY(110vh); }
+            to { transform: translateY(-20vh); }
+        }
+
+        #score-board {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            color: var(--primary-gold);
+            display: none;
+            z-index: 100;
+        }
+    </style>
 </head>
 <body>
 
-<!-- SCREEN 1: Input -->
-<div class="screen active" id="s1">
-  <h1>✨ Welcome 2026 ✨</h1>
-  <input type="text" id="name" placeholder="Enter your name"/>
-  <input type="text" id="fav" placeholder="Your favorite thing"/>
-  <button onclick="startJourney()">🎉 Begin</button>
-</div>
+    <canvas id="fireworksCanvas"></canvas>
 
-<!-- SCREEN 2: Greeting & Mini-game -->
-<div class="screen" id="s2">
-  <h1 id="greet"></h1>
-  <p id="wish"></p>
-  <img id="themeImg" src="" alt="Theme Image"/>
-  <div id="miniGame"></div>
-</div>
+    <div id="setup-screen">
+        <h1 style="color: var(--primary-gold)">Welcome 2026</h1>
+        <input type="text" id="userName" placeholder="What is your name?">
+        <input type="text" id="userFavorite" placeholder="Your favorite thing? (e.g. Travel, Coding)">
+        <button onclick="startCelebration()">Start Celebration</button>
+    </div>
 
-<button id="musicBtn" onclick="toggleMusic(event)">🔊</button>
-<audio id="bgm" loop>
-  <source src="https://cdn.pixabay.com/audio/2022/10/25/audio_5ff44f9bb2.mp3" type="audio/mpeg">
-</audio>
+    <div id="greeting-display">
+        <div class="reveal-text" id="main-wish">Happy New Year!</div>
+        <div class="sub-text" id="fav-wish"></div>
+        <p style="margin-top: 20px;">Pop the balloons for good luck!</p>
+    </div>
 
-<script>
-// Floating stars
-const stars=[];
-for(let i=0;i<100;i++){
-  const s=document.createElement("div");
-  s.className="star";
-  s.style.left=Math.random()*window.innerWidth+"px";
-  s.style.top=Math.random()*window.innerHeight+"px";
-  stars.push({el:s,y:parseFloat(s.style.top),speed:Math.random()*0.5+0.1});
-  document.body.appendChild(s);
-}
-function animateStars(){
-  stars.forEach(st=>{
-    st.y+=st.speed;
-    if(st.y>window.innerHeight) st.y=0;
-    st.el.style.top=st.y+"px";
-  });
-  requestAnimationFrame(animateStars);
-}
-animateStars();
+    <div id="score-board">Balloons Popped: <span id="score">0</span></div>
+    <div id="game-container"></div>
 
-// Fireworks follow mouse
-document.body.addEventListener("mousemove",firework);
-function firework(e){
-  const f=document.createElement("div");
-  f.className="firework";
-  f.style.left=e.clientX+"px";
-  f.style.top=e.clientY+"px";
-  document.body.appendChild(f);
-  setTimeout(()=>f.remove(),1000);
-}
+    <script>
+        const canvas = document.getElementById('fireworksCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let stars = [];
+        let score = 0;
+        let mouseX = 0, mouseY = 0;
 
-// Music toggle
-function toggleMusic(e){
-  e.stopPropagation();
-  const m=document.getElementById("bgm");
-  m.paused?m.play():m.pause();
-}
+        // Initialize Canvas
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
 
-// Animate text reveal
-function animateText(el,text,duration=50){
-  el.innerHTML="";
-  for(let i=0;i<text.length;i++){
-    const span=document.createElement("span");
-    span.className="reveal";
-    span.innerHTML=text[i];
-    el.appendChild(span);
-    setTimeout(()=>{span.style.opacity=1;},i*duration);
-  }
-}
+        // Parallax Effect & Mouse Follow
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            createFirework(mouseX, mouseY, true); // Sparkle trail
+        });
 
-// Mini-game balloons
-function createMiniGame(){
-  const game=document.getElementById("miniGame");
-  game.innerHTML="";
-  for(let i=0;i<8;i++){
-    const b=document.createElement("div");
-    b.className="balloon";
-    b.style.background=`hsl(${Math.random()*360},80%,60%)`;
-    b.style.left=Math.random()*270+"px";
-    b.style.top=Math.random()*150+"px";
-    b.onclick=function(){this.remove();}
-    game.appendChild(b);
-  }
-}
+        class Particle {
+            constructor(x, y, color, velocity, size) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.velocity = velocity;
+                this.alpha = 1;
+                this.friction = 0.95;
+                this.size = size;
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.restore();
+            }
+            update() {
+                this.velocity.x *= this.friction;
+                this.velocity.y *= this.friction;
+                this.velocity.y += 0.05; // gravity
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
+                this.alpha -= 0.01;
+            }
+        }
 
-// Start journey
-function startJourney(){
-  const name=document.getElementById("name").value.trim() || "Friend";
-  const fav=document.getElementById("fav").value.trim() || "joy";
+        function createFirework(x, y, isTrail = false) {
+            const count = isTrail ? 2 : 50;
+            const colors = ['#ff007f', '#ffd700', '#00fbff', '#ffffff'];
+            for (let i = 0; i < count; i++) {
+                const angle = (Math.PI * 2) / count * i;
+                const speed = isTrail ? Math.random() * 2 : Math.random() * 6 + 2;
+                particles.push(new Particle(
+                    x, y, 
+                    colors[Math.floor(Math.random() * colors.length)], 
+                    { x: Math.cos(angle) * speed, y: Math.sin(angle) * speed },
+                    isTrail ? 1 : 2
+                ));
+            }
+        }
 
-  document.getElementById("s1").classList.remove("active");
-  document.getElementById("s2").classList.add("active");
+        // Initialize Background Stars
+        for (let i = 0; i < 150; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 1.5,
+                speed: Math.random() * 0.5 + 0.1
+            });
+        }
 
-  animateText(document.getElementById("greet"),`Happy New Year, ${name}! 🎆 From Salil`);
-  animateText(document.getElementById("wish"),`May 2026 bring endless fun and happiness in your favorite thing: ${fav}! 🎉`);
+        function animate() {
+            ctx.fillStyle = 'rgba(10, 10, 35, 0.2)'; // Fading trail effect
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  document.getElementById("themeImg").src="https://cdn.pixabay.com/photo/2017/01/20/00/30/fireworks-1994879_1280.jpg";
+            // Draw Parallax Stars
+            stars.forEach(star => {
+                ctx.fillStyle = '#fff';
+                // Subtle horizontal drift based on mouse
+                let drift = (mouseX - canvas.width/2) * 0.01;
+                ctx.beginPath();
+                ctx.arc(star.x + drift, star.y, star.size, 0, Math.PI*2);
+                ctx.fill();
+                star.y += star.speed;
+                if (star.y > canvas.height) star.y = 0;
+            });
 
-  createMiniGame();
+            particles.forEach((p, i) => {
+                if (p.alpha <= 0) {
+                    particles.splice(i, 1);
+                } else {
+                    p.update();
+                    p.draw();
+                }
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
 
-  // Confetti every 3 seconds
-  setInterval(()=>{
-    for(let i=0;i<30;i++){
-      const c=document.createElement("div");
-      c.style.width="6px";
-      c.style.height="6px";
-      c.style.background=`hsl(${Math.random()*360},100%,60%)`;
-      c.style.position="absolute";
-      c.style.left=Math.random()*window.innerWidth+"px";
-      c.style.top="0px";
-      c.style.opacity=0.9;
-      c.style.borderRadius="50%";
-      document.body.appendChild(c);
-      let top=0;
-      const fall=setInterval(()=>{
-        top+=5;
-        c.style.top=top+"px";
-        if(top>window.innerHeight){c.remove();clearInterval(fall);}
-      },20);
-    }
-  },3000);
-}
-</script>
+        // Main logic
+        function startCelebration() {
+            const name = document.getElementById('userName').value || "Friend";
+            const fav = document.getElementById('userFavorite').value || "your dreams";
+            
+            // UI Transitions
+            document.getElementById('setup-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('setup-screen').style.display = 'none';
+                const greeting = document.getElementById('greeting-display');
+                greeting.style.display = 'block';
+                setTimeout(() => greeting.style.opacity = '1', 50);
+
+                document.getElementById('main-wish').innerText = `Happy New Year, ${name}!`;
+                document.getElementById('fav-wish').innerText = `May 2026 bring endless joy and fun in ${fav}!`;
+                
+                document.getElementById('game-container').style.display = 'block';
+                document.getElementById('score-board').style.display = 'block';
+                startMiniGame();
+                
+                // Automatic Confetti Burst
+                setInterval(() => {
+                    createFirework(Math.random() * canvas.width, Math.random() * canvas.height/2);
+                }, 3000);
+            }, 800);
+        }
+
+        // Mini Game Logic
+        function startMiniGame() {
+            setInterval(() => {
+                const balloon = document.createElement('div');
+                balloon.className = 'balloon';
+                balloon.style.left = Math.random() * 90 + 'vw';
+                balloon.style.filter = `hue-rotate(${Math.random() * 360}deg)`;
+                
+                balloon.onclick = () => {
+                    score++;
+                    document.getElementById('score').innerText = score;
+                    createFirework(parseInt(balloon.style.left) * window.innerWidth / 100, window.innerHeight * 0.5);
+                    balloon.remove();
+                };
+
+                document.getElementById('game-container').appendChild(balloon);
+                
+                // Clean up balloon after animation
+                setTimeout(() => { if(balloon) balloon.remove(); }, 5000);
+            }, 1200);
+        }
+    </script>
 </body>
 </html>
